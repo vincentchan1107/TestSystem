@@ -11,24 +11,28 @@
         .modal-transition { transition: opacity 0.2s ease, visibility 0.2s ease; }
         body { background: #f4f7fc; }
         .toast-notify { position: fixed; bottom: 24px; right: 24px; z-index: 1000; }
-        .sql-block { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.75rem; overflow-x: auto; font-family: monospace; font-size: 0.8rem; }
+        .sql-block { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.75rem; overflow-x: auto; font-family: monospace; font-size: 0.75rem; }
+        .setup-guide { background: #f0f9ff; border-left: 4px solid #0284c7; }
     </style>
 </head>
 <body class="font-sans antialiased">
 
     <div id="toastContainer" class="toast-notify"></div>
 
-    <!-- 数据库初始化向导 -->
+    <!-- 数据库初始化 + 管理员账户创建向导 -->
     <div id="dbSetupBanner" class="fixed inset-x-0 top-0 z-50 hidden">
         <div class="bg-amber-50 border-b border-amber-200 p-4 shadow-md">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                <div class="flex items-start gap-3">
-                    <i class="fas fa-database text-amber-600 text-xl mt-1"></i>
-                    <div>
-                        <h3 class="font-bold text-amber-800">⚠️ 数据库未就绪</h3>
-                        <p class="text-sm text-amber-700">未检测到 <code class="bg-amber-100 px-1 rounded">customers</code> 表。请复制下方 SQL 到 Supabase SQL 编辑器执行一次。</p>
-                        <div class="mt-2 sql-block text-xs">
-                            <pre id="sqlCommandBlock" class="whitespace-pre-wrap break-all">CREATE TABLE IF NOT EXISTS customers (
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-start">
+                    <div class="flex gap-3">
+                        <i class="fas fa-database text-amber-600 text-xl"></i>
+                        <div>
+                            <h3 class="font-bold text-amber-800">⚠️ 数据库未就绪或缺少管理员账户</h3>
+                            <p class="text-sm text-amber-700">请先执行以下步骤（仅需一次）：</p>
+                            <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                                <div class="bg-white p-2 rounded border">
+                                    <i class="fas fa-table text-blue-500 mr-1"></i> <strong>1. 创建 customers 表</strong>
+                                    <pre id="sqlCommandBlock" class="bg-gray-800 text-green-300 p-2 rounded mt-1 overflow-x-auto">CREATE TABLE IF NOT EXISTS customers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid REFERENCES auth.users NOT NULL,
   name text NOT NULL,
@@ -41,14 +45,24 @@
 );
 ALTER TABLE customers ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "用户只能访问自己的客户" ON customers
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid() = user_id);
 CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
+                                    <button id="copySqlBtn" class="mt-1 bg-amber-200 px-2 py-0.5 rounded"><i class="fas fa-copy"></i> 复制 SQL</button>
+                                </div>
+                                <div class="bg-white p-2 rounded border">
+                                    <i class="fas fa-user-plus text-green-500 mr-1"></i> <strong>2. 创建管理员账户</strong>
+                                    <p class="mt-1">在 Supabase Dashboard → <span class="font-mono">Authentication → Users</span> → <span class="font-mono">Add User</span><br>
+                                    邮箱：<code class="bg-gray-100 px-1">admin@crm.com</code>   密码：<code class="bg-gray-100 px-1">Admin123456</code><br>
+                                    （或执行下方 SQL，需启用 pgcrypto）</p>
+                                    <pre class="bg-gray-800 text-green-300 p-2 rounded mt-1 text-xs overflow-x-auto">-- 高级方法：直接插入用户（需谨慎）
+-- 建议使用 Dashboard 添加，更安全</pre>
+                                    <button id="copyAdminGuide" class="mt-1 bg-amber-200 px-2 py-0.5 rounded"><i class="fas fa-copy"></i> 复制邮箱密码</button>
+                                </div>
+                            </div>
                         </div>
-                        <button id="copySqlBtn" class="mt-2 text-xs bg-amber-200 hover:bg-amber-300 text-amber-800 px-3 py-1 rounded-lg"><i class="fas fa-copy"></i> 复制 SQL</button>
                     </div>
+                    <button id="closeSetupBanner" class="text-amber-700 hover:text-amber-900"><i class="fas fa-times"></i></button>
                 </div>
-                <button id="closeSetupBanner" class="text-amber-700 hover:text-amber-900"><i class="fas fa-times"></i> 关闭</button>
             </div>
         </div>
     </div>
@@ -61,7 +75,7 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
                     <i class="fas fa-users text-blue-600"></i>
                     客户管理系统
                 </h1>
-                <p class="text-gray-500 mt-1 text-sm">基于 Supabase 数据库 · 数据隔离 · 安全可靠</p>
+                <p class="text-gray-500 mt-1 text-sm">基于 Supabase 数据库 · 管理员可直接登录</p>
             </div>
             <div id="userInfoArea" class="flex items-center gap-3 bg-white px-4 py-2 rounded-xl shadow-sm">
                 <div class="text-sm text-gray-600" id="userStatusText">未登录</div>
@@ -71,11 +85,23 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
 
         <!-- 登录/注册卡片 -->
         <div id="authCard" class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-8 transition-all">
-            <div class="text-center mb-6">
+            <div class="text-center mb-4">
                 <i class="fas fa-lock text-blue-500 text-4xl mb-2"></i>
                 <h2 class="text-2xl font-bold text-gray-800">账户认证</h2>
-                <p class="text-gray-500 text-sm mt-1">使用邮箱密码登录或注册新账号</p>
+                <p class="text-gray-500 text-sm">登录以管理客户数据</p>
             </div>
+
+            <!-- 管理员快速登录提示 -->
+            <div class="bg-sky-50 border border-sky-200 rounded-lg p-3 mb-5 text-sm">
+                <div class="flex items-center gap-2 text-sky-700 font-medium">
+                    <i class="fas fa-user-shield"></i> 管理员快速登录
+                </div>
+                <p class="text-sky-600 text-xs mt-1">如果无法注册，请使用预设管理员账户：<code class="bg-white px-1 rounded">admin@crm.com</code> / <code class="bg-white px-1 rounded">Admin123456</code></p>
+                <button id="quickAdminLoginBtn" class="mt-2 w-full bg-sky-600 hover:bg-sky-700 text-white py-1.5 rounded-lg text-sm flex items-center justify-center gap-2">
+                    <i class="fas fa-key"></i> 一键填充管理员账号并登录
+                </button>
+            </div>
+
             <div class="mb-4">
                 <div class="flex gap-2 border-b mb-4">
                     <button id="loginTabBtn" class="tab-btn py-2 px-4 text-blue-600 border-b-2 border-blue-600 font-medium">登录</button>
@@ -84,7 +110,7 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
                 <div id="loginForm">
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-medium mb-1">邮箱地址</label>
-                        <input type="email" id="loginEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300" placeholder="customer@example.com">
+                        <input type="email" id="loginEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300" placeholder="admin@crm.com">
                     </div>
                     <div class="mb-5">
                         <label class="block text-gray-700 text-sm font-medium mb-1">密码</label>
@@ -102,10 +128,10 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
                         <input type="password" id="signupPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="至少6位">
                     </div>
                     <button id="doSignupBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition">注册新账号</button>
+                    <p class="text-xs text-gray-400 mt-3 text-center">⚠️ 如遇"邮件频率限制"，请等待几分钟或更换邮箱，或直接使用上方管理员登录。</p>
                 </div>
             </div>
-            <div class="text-xs text-center text-gray-400 mt-4 border-t pt-4">
-                首次使用请注册，数据将完全隔离<br>
+            <div class="text-xs text-center text-gray-400 mt-2 border-t pt-3">
                 <a href="#" class="text-blue-500" id="gotoSignupLink">没有账号？立即注册</a>
             </div>
         </div>
@@ -122,18 +148,13 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
                 </button>
             </div>
             <div class="bg-white rounded-2xl shadow-md overflow-hidden">
-                <div class="table-container overflow-x-auto">
+                <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">姓名</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">公司</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">电话</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">邮箱</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">地址</th><th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th></tr>
-                        </thead>
+                        <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500">姓名</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500">公司</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500">电话</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500">邮箱</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500">地址</th><th class="px-6 py-3 text-center text-xs font-medium text-gray-500">操作</th></tr></thead>
                         <tbody id="customerTableBody"><tr><td colspan="6" class="text-center py-8 text-gray-400">加载中...</td></tr></tbody>
                     </table>
                 </div>
-                <div class="bg-gray-50 px-6 py-3 text-xs text-gray-500 border-t flex justify-between items-center">
-                    <span id="recordCount">0 条记录</span>
-                    <span><i class="fas fa-database"></i> Supabase 存储</span>
-                </div>
+                <div class="bg-gray-50 px-6 py-3 text-xs text-gray-500 border-t flex justify-between"><span id="recordCount">0 条记录</span><span><i class="fas fa-database"></i> Supabase 存储</span></div>
             </div>
         </div>
     </div>
@@ -158,7 +179,7 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
     </div>
 
     <script>
-        // Supabase 配置（您的项目）
+        // Supabase 配置
         const SUPABASE_URL = 'https://hazxfinkokifujqlmkcs.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhenhmaW5rb2tpZnVqcWxta2NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3ODQ2MzcsImV4cCI6MjA5MjM2MDYzN30.y3njujhhcoZW5WTirqkGvWbv962e4F2whVVP0VeQ6ic';
 
@@ -180,6 +201,8 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
         const cancelModal = document.getElementById('cancelModalBtn'), saveCustomerBtn = document.getElementById('saveCustomerBtn');
         const recordSpan = document.getElementById('recordCount');
         const dbBanner = document.getElementById('dbSetupBanner'), copySql = document.getElementById('copySqlBtn'), closeBanner = document.getElementById('closeSetupBanner');
+        const quickAdminBtn = document.getElementById('quickAdminLoginBtn');
+        const copyAdminGuide = document.getElementById('copyAdminGuide');
 
         function showToast(msg, type='success') {
             const container = document.getElementById('toastContainer');
@@ -205,6 +228,7 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
             }catch(e){ dbBanner.classList.remove('hidden'); return false; }
         }
         if(copySql) copySql.onclick = ()=>{ navigator.clipboard.writeText(document.querySelector('#sqlCommandBlock')?.innerText||''); showToast('SQL已复制，请前往Supabase SQL编辑器执行','success'); };
+        if(copyAdminGuide) copyAdminGuide.onclick = ()=>{ navigator.clipboard.writeText('admin@crm.com / Admin123456'); showToast('管理员邮箱密码已复制','success'); };
         if(closeBanner) closeBanner.onclick = ()=> dbBanner.classList.add('hidden');
 
         async function loadCustomers(){
@@ -258,18 +282,19 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
         }
         async function confirmDelete(id){ if(!confirm('永久删除此客户？')) return; try{ let { error } = await supabase.from('customers').delete().eq('id',id).eq('user_id',currentUser.id); if(error) throw error; showToast('删除成功','success'); await loadCustomers(); }catch(err){ showToast('删除失败','error'); } }
 
-        // 认证部分（含增强的速率限制错误处理）
-        async function handleLogin(){
-            let email = document.getElementById('loginEmail').value.trim(), pwd = document.getElementById('loginPassword').value;
-            if(!email||!pwd){ showToast('请输入邮箱和密码','error'); return; }
+        // 登录 & 注册
+        async function handleLogin(emailInputId, pwdInputId){
+            let email = document.getElementById(emailInputId).value.trim(), pwd = document.getElementById(pwdInputId).value;
+            if(!email||!pwd){ showToast('请输入邮箱和密码','error'); return false; }
             try{
                 let { error } = await supabase.auth.signInWithPassword({ email, password: pwd });
                 if(error) throw error;
                 showToast('登录成功','success');
                 await checkUserSession();
+                return true;
             }catch(err){
-                if(err.message.includes('Invalid login')) showToast('邮箱或密码错误','error');
-                else showToast('登录失败: '+err.message,'error');
+                showToast('登录失败: '+err.message,'error');
+                return false;
             }
         }
         async function handleSignup(){
@@ -279,7 +304,6 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
             try{
                 let { error } = await supabase.auth.signUp({ email, password: pwd });
                 if(error){
-                    // 针对速率限制的特殊提示
                     if(error.message && error.message.toLowerCase().includes('email rate limit exceeded')){
                         showToast('⚠️ 注册请求过于频繁，请等待5-10分钟后再试，或更换邮箱地址','error');
                     }else{
@@ -293,12 +317,13 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
                 setAuthTab('login');
             }catch(err){
                 if(err.message && err.message.toLowerCase().includes('email rate limit exceeded')){
-                    showToast('⚠️ 邮件发送频率限制，请稍后再试或更换邮箱','error');
+                    showToast('⚠️ 邮件频率限制，请稍后再试或使用管理员登录','error');
                 }else{
                     showToast('注册异常: '+err.message,'error');
                 }
             }
         }
+
         function setAuthTab(tab){
             if(tab==='login'){
                 loginForm.classList.remove('hidden'); signupForm.classList.add('hidden');
@@ -329,17 +354,25 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
             }
         }
 
+        // 管理员快速登录：填充预设邮箱密码并触发登录
+        function quickAdminLogin(){
+            document.getElementById('loginEmail').value = 'admin@crm.com';
+            document.getElementById('loginPassword').value = 'Admin123456';
+            handleLogin('loginEmail','loginPassword');
+        }
+
         function bindEvents(){
             loginTab.onclick = ()=>setAuthTab('login');
             signupTab.onclick = ()=>setAuthTab('signup');
             gotoSignup.onclick = (e)=>{ e.preventDefault(); setAuthTab('signup'); };
-            doLogin.onclick = handleLogin;
+            doLogin.onclick = ()=>handleLogin('loginEmail','loginPassword');
             doSignup.onclick = handleSignup;
             addBtn.onclick = openAdd;
             closeModal.onclick = closeModalFunc;
             cancelModal.onclick = closeModalFunc;
             saveCustomerBtn.onclick = saveCustomer;
             modal.addEventListener('click',(e)=>{ if(e.target===modal) closeModalFunc(); });
+            if(quickAdminBtn) quickAdminBtn.onclick = quickAdminLogin;
         }
 
         async function init(){
@@ -350,7 +383,7 @@ CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
             await checkDbReady();
         }
         init();
-        console.log("%c✅ 系统已启动。如果注册遇到 'email rate limit exceeded'，请等待几分钟再试或更换邮箱。","color:#16a34a; font-size:14px");
+        console.log("%c✅ 系统已启动。如无法注册，请使用「管理员快速登录」按钮，或按顶部指引创建管理员账户。","color:#16a34a; font-size:14px");
     </script>
     <div class="text-center text-xs text-gray-400 py-4 border-t mt-8 max-w-7xl mx-auto">
         <i class="fas fa-cloud-upload-alt"></i> 托管于 GitHub Pages | 数据安全存储在 Supabase

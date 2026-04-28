@@ -1,392 +1,489 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-HK">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>客户管理系统 | Supabase + GitHub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>AI速成班講座｜ACHIEVER 手機簡報 (iPhone優化版)</title>
     <style>
-        .modal-transition { transition: opacity 0.2s ease, visibility 0.2s ease; }
-        body { background: #f4f7fc; }
-        .toast-notify { position: fixed; bottom: 24px; right: 24px; z-index: 1000; }
-        .sql-block { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.75rem; overflow-x: auto; font-family: monospace; font-size: 0.75rem; }
-        .setup-guide { background: #f0f9ff; border-left: 4px solid #0284c7; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* 移除iPhone點擊灰底 */
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans', 'PingFang HK', 'Microsoft YaHei', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* 手機主容器 */
+        .presentation-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 44px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 85vh;
+            max-height: 800px;
+            transition: all 0.2s ease;
+        }
+
+        /* 標題列 */
+        .title-bar {
+            padding: 18px 24px 10px 24px;
+            background: white;
+            border-bottom: 1px solid #eef2f6;
+        }
+        .title-bar h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #1e2b3c, #2a4b6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 4px;
+        }
+        .title-bar p {
+            font-size: 0.75rem;
+            color: #5b6e8c;
+            margin-top: 4px;
+        }
+
+        /* 幻燈片區域 */
+        .slides-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px 28px 24px;
+            scroll-behavior: smooth;
+            background: #ffffff;
+            -webkit-overflow-scrolling: touch; /* iPhone平滑滾動 */
+        }
+
+        /* 每張投影片 */
+        .slide {
+            display: none;
+            animation: fade 0.2s ease-out;
+            font-size: 1.28rem;
+            line-height: 1.55;
+            color: #0a1c2f;
+            word-break: break-word;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        /* 大字舒適 */
+        .slide p {
+            margin-bottom: 1.2rem;
+            font-size: 1.28rem;
+            font-weight: 460;
+        }
+
+        .slide h3 {
+            font-size: 1.65rem;
+            font-weight: 700;
+            margin: 1rem 0 0.8rem 0;
+            color: #0f3b5c;
+            border-left: 5px solid #2c7da0;
+            padding-left: 16px;
+        }
+
+        .slide h4 {
+            font-size: 1.4rem;
+            font-weight: 620;
+            margin: 1.2rem 0 0.5rem 0;
+            color: #1e4a6b;
+        }
+
+        .slide .highlight {
+            background: #ffe7b3;
+            padding: 0.1rem 0.3rem;
+            border-radius: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .slide .stat-badge {
+            background: #eef2ff;
+            border-left: 5px solid #2c7da0;
+            padding: 1rem 1.2rem;
+            border-radius: 24px;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+
+        .slide ul, .slide .checklist {
+            margin: 0.8rem 0 1rem 1.4rem;
+            padding-left: 0.2rem;
+        }
+        .slide li {
+            margin: 0.65rem 0;
+            font-size: 1.22rem;
+        }
+
+        .slide .applause {
+            background: #e9f4f8;
+            padding: 0.9rem 1rem;
+            border-radius: 60px;
+            text-align: center;
+            font-weight: 600;
+            color: #1f6392;
+            margin: 1.3rem 0;
+            font-size: 1.3rem;
+        }
+
+        .slide .quote {
+            font-style: normal;
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 32px;
+            margin: 1rem 0;
+            font-weight: 500;
+            border: 1px solid #e2edf2;
+        }
+
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* 導航列 — 大按鈕，iPhone 友善 */
+        .nav-bar {
+            background: #ffffff;
+            border-top: 1px solid #e9eef3;
+            padding: 14px 20px 22px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.02);
+        }
+
+        .nav-btn {
+            background: #f0f4f9;
+            border: none;
+            font-size: 1.6rem;
+            font-weight: 600;
+            padding: 14px 20px;
+            border-radius: 60px;
+            min-width: 110px;
+            color: #1e4a6b;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            font-family: inherit;
+            flex: 1;
+            text-align: center;
+            letter-spacing: 1px;
+            /* iPhone 點擊區域加大 */
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(0,0,0,0.05);
+        }
+
+        /* 按鈕按下回饋 */
+        .nav-btn:active {
+            background: #dce3ec;
+            transform: scale(0.96);
+            transition: 0.02s;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            transform: none;
+            cursor: not-allowed;
+            background: #eef2f6;
+        }
+
+        .page-indicator {
+            font-size: 1rem;
+            font-weight: 500;
+            background: #eef3fc;
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: #1f6392;
+            white-space: nowrap;
+        }
+
+        /* 手機細微調整 */
+        @media (max-width: 500px) {
+            .slides-area {
+                padding: 16px 20px 24px 20px;
+            }
+            .slide {
+                font-size: 1.2rem;
+            }
+            .slide p {
+                font-size: 1.2rem;
+            }
+            .nav-btn {
+                padding: 12px 16px;
+                min-width: 90px;
+                font-size: 1.4rem;
+            }
+            .title-bar h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* 滾動條美觀 */
+        .slides-area::-webkit-scrollbar {
+            width: 4px;
+        }
+        .slides-area::-webkit-scrollbar-track {
+            background: #eef2f6;
+            border-radius: 10px;
+        }
+        .slides-area::-webkit-scrollbar-thumb {
+            background: #bac8d9;
+            border-radius: 10px;
+        }
     </style>
 </head>
-<body class="font-sans antialiased">
+<body>
+<div class="presentation-container">
+    <div class="title-bar">
+        <h2>🤖 AI速成班 · 實戰講座</h2>
+        <p>ACHIEVER 主辦 | 點擊下方按鈕翻頁</p>
+    </div>
 
-    <div id="toastContainer" class="toast-notify"></div>
+    <div class="slides-area" id="slidesArea">
+        <!-- 投影片 1 : 開場歡迎 -->
+        <div class="slide active" data-index="0">
+            <p>🎤 各位來賓，歡迎大家嚟到 <strong>ACHIEVER</strong> 舉辦既 <strong>AI速成班</strong> 既講座！</p>
+            <p>我係今日嘅大會司儀 <strong>VINCENT</strong>，好多謝大家既來臨。</p>
+            <p>亦同時多謝我地既合作伙伴 <strong>HKBN</strong> 既協助，我地既活動都先可以咁成功 🎉</p>
+            <div class="quote">✨ 今日一齊拆解AI — 由生活應用，到真金白銀幫你慳成本！</div>
+        </div>
 
-    <!-- 数据库初始化 + 管理员账户创建向导 -->
-    <div id="dbSetupBanner" class="fixed inset-x-0 top-0 z-50 hidden">
-        <div class="bg-amber-50 border-b border-amber-200 p-4 shadow-md">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex justify-between items-start">
-                    <div class="flex gap-3">
-                        <i class="fas fa-database text-amber-600 text-xl"></i>
-                        <div>
-                            <h3 class="font-bold text-amber-800">⚠️ 数据库未就绪或缺少管理员账户</h3>
-                            <p class="text-sm text-amber-700">请先执行以下步骤（仅需一次）：</p>
-                            <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                                <div class="bg-white p-2 rounded border">
-                                    <i class="fas fa-table text-blue-500 mr-1"></i> <strong>1. 创建 customers 表</strong>
-                                    <pre id="sqlCommandBlock" class="bg-gray-800 text-green-300 p-2 rounded mt-1 overflow-x-auto">CREATE TABLE IF NOT EXISTS customers (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid REFERENCES auth.users NOT NULL,
-  name text NOT NULL,
-  company text,
-  phone text,
-  email text,
-  address text,
-  created_at timestamptz DEFAULT now(),
-  updated_at timestamptz DEFAULT now()
-);
-ALTER TABLE customers ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "用户只能访问自己的客户" ON customers
-  USING (auth.uid() = user_id);
-CREATE INDEX IF NOT EXISTS idx_customers_user_id ON customers(user_id);</pre>
-                                    <button id="copySqlBtn" class="mt-1 bg-amber-200 px-2 py-0.5 rounded"><i class="fas fa-copy"></i> 复制 SQL</button>
-                                </div>
-                                <div class="bg-white p-2 rounded border">
-                                    <i class="fas fa-user-plus text-green-500 mr-1"></i> <strong>2. 创建管理员账户</strong>
-                                    <p class="mt-1">在 Supabase Dashboard → <span class="font-mono">Authentication → Users</span> → <span class="font-mono">Add User</span><br>
-                                    邮箱：<code class="bg-gray-100 px-1">admin@crm.com</code>   密码：<code class="bg-gray-100 px-1">Admin123456</code><br>
-                                    （或执行下方 SQL，需启用 pgcrypto）</p>
-                                    <pre class="bg-gray-800 text-green-300 p-2 rounded mt-1 text-xs overflow-x-auto">-- 高级方法：直接插入用户（需谨慎）
--- 建议使用 Dashboard 添加，更安全</pre>
-                                    <button id="copyAdminGuide" class="mt-1 bg-amber-200 px-2 py-0.5 rounded"><i class="fas fa-copy"></i> 复制邮箱密码</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button id="closeSetupBanner" class="text-amber-700 hover:text-amber-900"><i class="fas fa-times"></i></button>
-                </div>
-            </div>
+        <!-- 投影片 2 : AI話題 + 互動提問 -->
+        <div class="slide" data-index="1">
+            <p>🔥 今日呢個活動，我哋會一齊拆解一個好Hit嘅話題——<strong>AI</strong>。</p>
+            <p>講起AI，我相信大家都應該聽唔少，我想問下大家<strong>有無到現在都未用過AI？</strong> 唔好怕醜舉一舉手睇下 🙋🏻‍♀️🙋🏽‍♂️</p>
+            <p>絕對了解相信今時今日AI都真係不停喺生活出現。<br>
+            有人會問下天氣，有人會叫佢安排下旅行行程，點至有啲人會同AI傾計⋯⋯</p>
+            <p>😆 唔係講笑，的確我公司有位同事成日都分享同AI傾計既趣事。</p>
+            <div class="stat-badge">💬 由娛樂到效率，AI已經不知不覺融入日常。</div>
+        </div>
+
+        <!-- 投影片 3 : 真金白銀慳成本 + 實例 -->
+        <div class="slide" data-index="2">
+            <p>📌 入番正題先，今日唔係同你講點樣同AI相處，而係講緊<strong>真金白銀、點樣幫你慳時間慳成本</strong>嘅實用嘢。</p>
+            <p>💡 我同你講個有趣嘅實例：<br>
+            以前想做個廣告或者想介紹下公司產品，又要自己諗點樣介紹，諗完又要搵人去拍去設計，拍完又要剪片⋯⋯等等等，唔好話幾個鐘，可能最少都要搞一兩日。</p>
+            <p>⚡️ 而家同你講打幾句指令，<strong class="highlight">三分鐘搞掂</strong>，仲要幫你自動配埋字幕、加埋品牌Logo。</p>
+            <p>🤖 仲有老闆用<strong>AI Agent</strong>，即係AI助手，自動覆客、自動追數、自動安排會議，夜晚瞓覺嗰陣佢仲幫你做緊生意——<strong>你話係咪仲好過神奇？</strong></p>
+        </div>
+
+        <!-- 投影片 4 : 國際數據 + 警醒句 -->
+        <div class="slide" data-index="3">
+            <p>📊 <strong>數據唔呃人：</strong><br>
+            根據國際研究機構 Gartner 同麥肯錫嘅最新報告：</p>
+            <ul>
+                <li>📌 截至2025年底，全球已有超過 <strong>55%</strong> 嘅企業喺至少一個業務範疇使用AI；</li>
+                <li>📌 預計到2026年底，呢個數字會升到超過 <strong>72%</strong>。</li>
+                <li>📈 而成功應用AI嘅企業，業務效率平均提升 <strong>30%至45%</strong>，營運成本平均降低 <strong>四成</strong>。</li>
+            </ul>
+            <div class="quote">⚠️ <strong>簡單講：你唔用AI，你嘅對手就會用AI超越你。</strong></div>
+        </div>
+
+        <!-- 投影片 5 : 過渡 + DAVE 介紹 -->
+        <div class="slide" data-index="4">
+            <p>🚀 咁究竟點樣開始？今日第一個環節，我哋請嚟實戰專家 <strong>DAVE</strong>。</p>
+            <p>DAVE 會用真實案例同你講解：</p>
+            <ul>
+                <li>✅ 點樣用指令控制AI剪片，快速建立自己公司品牌？</li>
+                <li>✅ 點樣用AI Agent，幫你企業自動化運作，由客戶服務到內部流程一手包辦？</li>
+            </ul>
+            <div class="applause">👏🏼 掌聲有請 DAVE！👏🏼</div>
+        </div>
+
+        <!-- 投影片 6 : DAVE後 + 系統整合 + TIMOTHY -->
+        <div class="slide" data-index="5">
+            <p>🎙️ <strong>多謝DAVE嘅精彩分享。</strong><br>
+            學完點樣用AI做市場推廣同自動化任務，我哋再進一步：<strong>點樣將AI直接嵌入你公司嘅核心系統？</strong></p>
+            <p>例如你公司用緊嘅系統，點樣可以同AI打通，<br>
+            由「人搵數據」變成「<strong>AI主動提醒你邊張單就快過期、邊個流程可以慳錢</strong>」——<strong>係咪好吸引？</strong></p>
+            <p>第二位講者 <strong>TIMOTHY</strong> 會同你分享 <strong>AI企業方案模塊</strong>，<br>
+            教你點樣將AI「套入」現有嘅企業系統，<strong>唔使砍掉重練</strong>，都可以即刻升級做智能企業。</p>
+            <div class="applause">🤝 掌聲有請 TIMOTHY！🤝</div>
+        </div>
+
+        <!-- 投影片 7 : 總結 + 金句 + 會後行動 -->
+        <div class="slide" data-index="6">
+            <p>🏆 <strong>多謝TIMOTHY。</strong><br>
+            今日兩個環節，由業務實踐到系統整合，相信大家都睇到AI唔再係遙遠概念，而係幫你企業賺到盡、快人一步嘅工具。</p>
+            <div class="quote">💎 <strong>記住：AI唔會取代你，但識用AI嘅同行會取代你。</strong></div>
+            <p>📞 如果你聽完之後，想知具體點樣喺你公司落地、或者想攞更多案例同建議，歡迎活動後直接向我哋同事查詢，或者可以約定個會議、交低卡片，我哋會找顧問直接再聯絡你。</p>
+            <p>🎁 另外入場既時候我地都比左份表大家，<strong>填完交番比我地門口同事</strong>，我地會有小禮物比番大家！</p>
+        </div>
+
+        <!-- 投影片 8 : 謝幕 祝福 -->
+        <div class="slide" data-index="7">
+            <p>❤️ <strong>再次多謝各位嚟來臨</strong>，祝大家業務效率倍升，愈做愈輕鬆！</p>
+            <p>✨ 下次活動再見！✨</p>
+            <div class="stat-badge" style="text-align: center; margin-top: 1.8rem;">🚀 ACHIEVER × HKBN — 智慧企業・搶先一步</div>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
-        <!-- 头部 -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-3">
-                    <i class="fas fa-users text-blue-600"></i>
-                    客户管理系统
-                </h1>
-                <p class="text-gray-500 mt-1 text-sm">基于 Supabase 数据库 · 管理员可直接登录</p>
-            </div>
-            <div id="userInfoArea" class="flex items-center gap-3 bg-white px-4 py-2 rounded-xl shadow-sm">
-                <div class="text-sm text-gray-600" id="userStatusText">未登录</div>
-                <div id="authButtonContainer"></div>
-            </div>
-        </div>
-
-        <!-- 登录/注册卡片 -->
-        <div id="authCard" class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-8 transition-all">
-            <div class="text-center mb-4">
-                <i class="fas fa-lock text-blue-500 text-4xl mb-2"></i>
-                <h2 class="text-2xl font-bold text-gray-800">账户认证</h2>
-                <p class="text-gray-500 text-sm">登录以管理客户数据</p>
-            </div>
-
-            <!-- 管理员快速登录提示 -->
-            <div class="bg-sky-50 border border-sky-200 rounded-lg p-3 mb-5 text-sm">
-                <div class="flex items-center gap-2 text-sky-700 font-medium">
-                    <i class="fas fa-user-shield"></i> 管理员快速登录
-                </div>
-                <p class="text-sky-600 text-xs mt-1">如果无法注册，请使用预设管理员账户：<code class="bg-white px-1 rounded">admin@crm.com</code> / <code class="bg-white px-1 rounded">Admin123456</code></p>
-                <button id="quickAdminLoginBtn" class="mt-2 w-full bg-sky-600 hover:bg-sky-700 text-white py-1.5 rounded-lg text-sm flex items-center justify-center gap-2">
-                    <i class="fas fa-key"></i> 一键填充管理员账号并登录
-                </button>
-            </div>
-
-            <div class="mb-4">
-                <div class="flex gap-2 border-b mb-4">
-                    <button id="loginTabBtn" class="tab-btn py-2 px-4 text-blue-600 border-b-2 border-blue-600 font-medium">登录</button>
-                    <button id="signupTabBtn" class="tab-btn py-2 px-4 text-gray-500 hover:text-gray-700">注册</button>
-                </div>
-                <div id="loginForm">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-1">邮箱地址</label>
-                        <input type="email" id="loginEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300" placeholder="admin@crm.com">
-                    </div>
-                    <div class="mb-5">
-                        <label class="block text-gray-700 text-sm font-medium mb-1">密码</label>
-                        <input type="password" id="loginPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-300" placeholder="至少6位">
-                    </div>
-                    <button id="doLoginBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition">登录</button>
-                </div>
-                <div id="signupForm" class="hidden">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-1">邮箱地址</label>
-                        <input type="email" id="signupEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="your@email.com">
-                    </div>
-                    <div class="mb-5">
-                        <label class="block text-gray-700 text-sm font-medium mb-1">密码</label>
-                        <input type="password" id="signupPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="至少6位">
-                    </div>
-                    <button id="doSignupBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition">注册新账号</button>
-                    <p class="text-xs text-gray-400 mt-3 text-center">⚠️ 如遇"邮件频率限制"，请等待几分钟或更换邮箱，或直接使用上方管理员登录。</p>
-                </div>
-            </div>
-            <div class="text-xs text-center text-gray-400 mt-2 border-t pt-3">
-                <a href="#" class="text-blue-500" id="gotoSignupLink">没有账号？立即注册</a>
-            </div>
-        </div>
-
-        <!-- 客户管理主界面 -->
-        <div id="customerPanel" class="hidden">
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-                <div class="relative w-full sm:w-80">
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" id="searchInput" placeholder="搜索客户姓名、公司或电话..." class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-xl shadow-sm focus:border-blue-400">
-                </div>
-                <button id="openAddModalBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow flex items-center gap-2 transition">
-                    <i class="fas fa-plus"></i> 新增客户
-                </button>
-            </div>
-            <div class="bg-white rounded-2xl shadow-md overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500">姓名</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500">公司</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500">电话</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500">邮箱</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500">地址</th><th class="px-6 py-3 text-center text-xs font-medium text-gray-500">操作</th></tr></thead>
-                        <tbody id="customerTableBody"><tr><td colspan="6" class="text-center py-8 text-gray-400">加载中...</td></tr></tbody>
-                    </table>
-                </div>
-                <div class="bg-gray-50 px-6 py-3 text-xs text-gray-500 border-t flex justify-between"><span id="recordCount">0 条记录</span><span><i class="fas fa-database"></i> Supabase 存储</span></div>
-            </div>
-        </div>
+    <div class="nav-bar">
+        <button class="nav-btn" id="prevBtn">◀ 上一頁</button>
+        <span class="page-indicator" id="pageIndicator">1 / 8</span>
+        <button class="nav-btn" id="nextBtn">下一頁 ▶</button>
     </div>
+</div>
 
-    <!-- 客户模态框 -->
-    <div id="customerModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 modal-transition invisible opacity-0">
-        <div class="bg-white rounded-2xl w-full max-w-md mx-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b px-6 py-4"><h3 id="modalTitle" class="text-xl font-semibold">新增客户</h3><button id="closeModalBtn" class="text-gray-400 text-2xl">&times;</button></div>
-            <div class="p-6 space-y-4">
-                <input type="hidden" id="editCustomerId">
-                <div><label class="block text-sm font-medium mb-1">姓名 <span class="text-red-500">*</span></label><input type="text" id="customerName" class="w-full border rounded-lg px-3 py-2"></div>
-                <div><label class="block text-sm font-medium mb-1">公司</label><input type="text" id="customerCompany" class="w-full border rounded-lg px-3 py-2"></div>
-                <div><label class="block text-sm font-medium mb-1">电话</label><input type="tel" id="customerPhone" class="w-full border rounded-lg px-3 py-2"></div>
-                <div><label class="block text-sm font-medium mb-1">邮箱</label><input type="email" id="customerEmail" class="w-full border rounded-lg px-3 py-2"></div>
-                <div><label class="block text-sm font-medium mb-1">地址</label><input type="text" id="customerAddress" class="w-full border rounded-lg px-3 py-2"></div>
-            </div>
-            <div class="flex justify-end gap-3 border-t px-6 py-4 bg-gray-50 rounded-b-2xl">
-                <button id="cancelModalBtn" class="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-100">取消</button>
-                <button id="saveCustomerBtn" class="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">保存</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Supabase 配置
-        const SUPABASE_URL = 'https://hazxfinkokifujqlmkcs.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhhenhmaW5rb2tpZnVqcWxta2NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3ODQ2MzcsImV4cCI6MjA5MjM2MDYzN30.y3njujhhcoZW5WTirqkGvWbv962e4F2whVVP0VeQ6ic';
-
-        let supabase = null, currentUser = null, allCustomers = [], searchKeyword = '';
-
+<script>
+    (function() {
         // DOM 元素
-        const authCard = document.getElementById('authCard'), customerPanel = document.getElementById('customerPanel');
-        const loginForm = document.getElementById('loginForm'), signupForm = document.getElementById('signupForm');
-        const loginTab = document.getElementById('loginTabBtn'), signupTab = document.getElementById('signupTabBtn');
-        const doLogin = document.getElementById('doLoginBtn'), doSignup = document.getElementById('doSignupBtn');
-        const gotoSignup = document.getElementById('gotoSignupLink');
-        const userStatus = document.getElementById('userStatusText'), authBtnContainer = document.getElementById('authButtonContainer');
-        const customerTable = document.getElementById('customerTableBody'), searchInput = document.getElementById('searchInput');
-        const addBtn = document.getElementById('openAddModalBtn'), modal = document.getElementById('customerModal');
-        const modalTitle = document.getElementById('modalTitle'), editId = document.getElementById('editCustomerId');
-        const nameInp = document.getElementById('customerName'), companyInp = document.getElementById('customerCompany');
-        const phoneInp = document.getElementById('customerPhone'), emailInp = document.getElementById('customerEmail');
-        const addressInp = document.getElementById('customerAddress'), closeModal = document.getElementById('closeModalBtn');
-        const cancelModal = document.getElementById('cancelModalBtn'), saveCustomerBtn = document.getElementById('saveCustomerBtn');
-        const recordSpan = document.getElementById('recordCount');
-        const dbBanner = document.getElementById('dbSetupBanner'), copySql = document.getElementById('copySqlBtn'), closeBanner = document.getElementById('closeSetupBanner');
-        const quickAdminBtn = document.getElementById('quickAdminLoginBtn');
-        const copyAdminGuide = document.getElementById('copyAdminGuide');
+        const slides = document.querySelectorAll('.slide');
+        const prevButton = document.getElementById('prevBtn');
+        const nextButton = document.getElementById('nextBtn');
+        const indicator = document.getElementById('pageIndicator');
+        const slidesArea = document.getElementById('slidesArea');
 
-        function showToast(msg, type='success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            const bg = type==='success'?'bg-green-500':(type==='error'?'bg-red-500':'bg-blue-500');
-            toast.className = `${bg} text-white px-5 py-3 rounded-lg shadow-lg mb-3 flex items-center gap-2`;
-            toast.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':'fa-exclamation-circle'}"></i> ${msg}`;
-            container.appendChild(toast);
-            setTimeout(()=>{toast.style.opacity='0'; setTimeout(()=>toast.remove(),300);},3000);
+        // 確認所有元素都存在
+        if (!slides.length || !prevButton || !nextButton || !indicator) {
+            console.warn('必要元件遺失，請檢查 HTML');
+            return;
         }
 
-        function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>]/g, m=>({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
+        let currentIdx = 0;
+        const totalSlides = slides.length;
 
-        async function initSupabase(){ supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
-
-        async function checkDbReady(){
-            try{
-                const { error } = await supabase.from('customers').select('id',{count:'exact',head:true});
-                if(error && (error.code==='42P01' || error.message.includes('does not exist') || error.message.includes('permission denied'))){
-                    dbBanner.classList.remove('hidden'); return false;
+        // 更新投影片與按鈕狀態，並將內容區域捲回頂部
+        function updateSlides() {
+            // 更新 active class
+            slides.forEach((slide, idx) => {
+                if (idx === currentIdx) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
                 }
-                dbBanner.classList.add('hidden'); return true;
-            }catch(e){ dbBanner.classList.remove('hidden'); return false; }
-        }
-        if(copySql) copySql.onclick = ()=>{ navigator.clipboard.writeText(document.querySelector('#sqlCommandBlock')?.innerText||''); showToast('SQL已复制，请前往Supabase SQL编辑器执行','success'); };
-        if(copyAdminGuide) copyAdminGuide.onclick = ()=>{ navigator.clipboard.writeText('admin@crm.com / Admin123456'); showToast('管理员邮箱密码已复制','success'); };
-        if(closeBanner) closeBanner.onclick = ()=> dbBanner.classList.add('hidden');
+            });
 
-        async function loadCustomers(){
-            if(!currentUser) return;
-            try{
-                const { data, error } = await supabase.from('customers').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
-                if(error) throw error;
-                allCustomers = data||[];
-                renderTable();
-                recordSpan.innerText = `${allCustomers.length} 条记录`;
-            }catch(err){ showToast('加载失败: '+err.message,'error'); allCustomers=[]; renderTable(); }
-        }
+            // 更新頁碼指示器
+            indicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
 
-        function renderTable(){
-            const kw = searchKeyword.trim().toLowerCase();
-            let filtered = allCustomers.filter(c => (c.name&&c.name.toLowerCase().includes(kw))||(c.company&&c.company.toLowerCase().includes(kw))||(c.phone&&c.phone.toLowerCase().includes(kw))||(c.email&&c.email.toLowerCase().includes(kw)));
-            if(filtered.length===0){ customerTable.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-gray-400"><i class="fas fa-inbox"></i> 暂无客户数据</td></tr>`; recordSpan.innerText = `${filtered.length} 条记录`; return; }
-            let html = '';
-            for(let c of filtered){
-                html += `<tr class="hover:bg-gray-50"><td class="px-6 py-4 whitespace-nowrap text-sm font-medium">${escapeHtml(c.name)||'-'}</td><td class="px-6 py-4 whitespace-nowrap text-sm">${escapeHtml(c.company)||'-'}</td><td class="px-6 py-4 whitespace-nowrap text-sm">${escapeHtml(c.phone)||'-'}</td><td class="px-6 py-4 whitespace-nowrap text-sm">${escapeHtml(c.email)||'-'}</td><td class="px-6 py-4 whitespace-nowrap text-sm">${escapeHtml(c.address)||'-'}</td><td class="px-6 py-4 whitespace-nowrap text-center"><button class="edit-btn text-blue-600 hover:text-blue-800 mr-3" data-id="${c.id}"><i class="fas fa-edit"></i> 编辑</button><button class="del-btn text-red-600 hover:text-red-800" data-id="${c.id}"><i class="fas fa-trash-alt"></i> 删除</button></td></tr>`;
-            }
-            customerTable.innerHTML = html;
-            recordSpan.innerText = `${filtered.length} / ${allCustomers.length} 条记录`;
-            document.querySelectorAll('.edit-btn').forEach(btn=>btn.addEventListener('click',()=>openEdit(btn.dataset.id)));
-            document.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>confirmDelete(btn.dataset.id)));
-        }
+            // 按鈕禁用邏輯
+            prevButton.disabled = (currentIdx === 0);
+            nextButton.disabled = (currentIdx === totalSlides - 1);
 
-        searchInput?.addEventListener('input',e=>{ searchKeyword=e.target.value; renderTable(); });
-        function openAdd(){ modalTitle.innerText='新增客户'; editId.value=''; [nameInp,companyInp,phoneInp,emailInp,addressInp].forEach(i=>i.value=''); modal.classList.remove('invisible','opacity-0'); }
-        function openEdit(id){ let cust = allCustomers.find(c=>c.id===id); if(!cust) return; modalTitle.innerText='编辑客户'; editId.value=cust.id; nameInp.value=cust.name||''; companyInp.value=cust.company||''; phoneInp.value=cust.phone||''; emailInp.value=cust.email||''; addressInp.value=cust.address||''; modal.classList.remove('invisible','opacity-0'); }
-        function closeModalFunc(){ modal.classList.add('invisible','opacity-0'); }
-        async function saveCustomer(){
-            if(!currentUser){ showToast('请先登录','error'); return; }
-            let name = nameInp.value.trim();
-            if(!name){ showToast('姓名不能为空','error'); return; }
-            let payload = { name, company: companyInp.value.trim()||null, phone: phoneInp.value.trim()||null, email: emailInp.value.trim()||null, address: addressInp.value.trim()||null, user_id: currentUser.id, updated_at: new Date().toISOString() };
-            let id = editId.value;
-            try{
-                if(id){
-                    let { error } = await supabase.from('customers').update(payload).eq('id',id).eq('user_id',currentUser.id);
-                    if(error) throw error;
-                    showToast('更新成功','success');
-                }else{
-                    payload.created_at = new Date().toISOString();
-                    let { error } = await supabase.from('customers').insert(payload);
-                    if(error) throw error;
-                    showToast('添加成功','success');
-                }
-                closeModalFunc(); await loadCustomers();
-            }catch(err){ showToast('操作失败: '+err.message,'error'); }
-        }
-        async function confirmDelete(id){ if(!confirm('永久删除此客户？')) return; try{ let { error } = await supabase.from('customers').delete().eq('id',id).eq('user_id',currentUser.id); if(error) throw error; showToast('删除成功','success'); await loadCustomers(); }catch(err){ showToast('删除失败','error'); } }
-
-        // 登录 & 注册
-        async function handleLogin(emailInputId, pwdInputId){
-            let email = document.getElementById(emailInputId).value.trim(), pwd = document.getElementById(pwdInputId).value;
-            if(!email||!pwd){ showToast('请输入邮箱和密码','error'); return false; }
-            try{
-                let { error } = await supabase.auth.signInWithPassword({ email, password: pwd });
-                if(error) throw error;
-                showToast('登录成功','success');
-                await checkUserSession();
-                return true;
-            }catch(err){
-                showToast('登录失败: '+err.message,'error');
-                return false;
+            // 每次翻頁後，把幻燈片區域捲動到最頂，方便閱讀新內容 (iPhone 友善)
+            if (slidesArea) {
+                slidesArea.scrollTop = 0;
             }
         }
-        async function handleSignup(){
-            let email = document.getElementById('signupEmail').value.trim(), pwd = document.getElementById('signupPassword').value;
-            if(!email||!pwd){ showToast('请填写邮箱和密码','error'); return; }
-            if(pwd.length<6){ showToast('密码至少6位','error'); return; }
-            try{
-                let { error } = await supabase.auth.signUp({ email, password: pwd });
-                if(error){
-                    if(error.message && error.message.toLowerCase().includes('email rate limit exceeded')){
-                        showToast('⚠️ 注册请求过于频繁，请等待5-10分钟后再试，或更换邮箱地址','error');
-                    }else{
-                        showToast('注册失败: '+error.message,'error');
-                    }
+
+        // 下一頁函式 (提供給事件與外部呼叫)
+        function goToNext() {
+            if (currentIdx < totalSlides - 1) {
+                currentIdx++;
+                updateSlides();
+            }
+        }
+
+        // 上一頁函式
+        function goToPrev() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                updateSlides();
+            }
+        }
+
+        // ---- 按鈕事件綁定: 同時使用 click 與 touchstart 確保 iPhone 即時反應 ----
+        // 使用 touchstart 能提供最即時的觸控反饋，並防止雙擊縮放干擾
+        // 同時保留 click 以涵蓋所有情況 (滑鼠/鍵盤)
+        
+        const handleNext = (e) => {
+            // 防止事件冒泡造成干擾 (無副作用)
+            if (e) {
+                e.preventDefault?.();  // 不影響預設行為但避免潛在問題
+                e.stopPropagation?.();
+            }
+            goToNext();
+        };
+        
+        const handlePrev = (e) => {
+            if (e) {
+                e.preventDefault?.();
+                e.stopPropagation?.();
+            }
+            goToPrev();
+        };
+        
+        // 對下一頁按鈕增加兩個監聽器 (移動端觸控優先)
+        nextButton.addEventListener('touchstart', handleNext, { passive: false });
+        nextButton.addEventListener('click', handleNext);
+        
+        prevButton.addEventListener('touchstart', handlePrev, { passive: false });
+        prevButton.addEventListener('click', handlePrev);
+        
+        // 為確保按鈕在 disabled 狀態下依然無法觸發 (touchstart 也會檢查，但瀏覽器本身會根據 disabled 屬性屏蔽部分事件)
+        // 但 touchstart 在 disabled 按鈕上仍會觸發，需手動檢查
+        function addDisabledGuard(btn, callback) {
+            const guarded = (e) => {
+                if (btn.disabled) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     return;
                 }
-                showToast('注册成功！请登录','success');
-                document.getElementById('loginEmail').value = email;
-                document.getElementById('loginPassword').value = '';
-                setAuthTab('login');
-            }catch(err){
-                if(err.message && err.message.toLowerCase().includes('email rate limit exceeded')){
-                    showToast('⚠️ 邮件频率限制，请稍后再试或使用管理员登录','error');
-                }else{
-                    showToast('注册异常: '+err.message,'error');
-                }
+                callback(e);
+            };
+            return guarded;
+        }
+        
+        // 重建監聽確保 disabled 時完全不觸發翻頁
+        // 移除舊的重新綁定更乾淨
+        const newNextHandler = addDisabledGuard(nextButton, handleNext);
+        const newPrevHandler = addDisabledGuard(prevButton, handlePrev);
+        
+        // 移除原先監聽再綁定安全版本
+        nextButton.removeEventListener('touchstart', handleNext);
+        nextButton.removeEventListener('click', handleNext);
+        prevButton.removeEventListener('touchstart', handlePrev);
+        prevButton.removeEventListener('click', handlePrev);
+        
+        nextButton.addEventListener('touchstart', newNextHandler, { passive: false });
+        nextButton.addEventListener('click', newNextHandler);
+        prevButton.addEventListener('touchstart', newPrevHandler, { passive: false });
+        prevButton.addEventListener('click', newPrevHandler);
+        
+        // 鍵盤左右鍵支援 (方便藍牙鍵盤或測試)
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (!nextButton.disabled) goToNext();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (!prevButton.disabled) goToPrev();
             }
-        }
-
-        function setAuthTab(tab){
-            if(tab==='login'){
-                loginForm.classList.remove('hidden'); signupForm.classList.add('hidden');
-                loginTab.className='tab-btn py-2 px-4 text-blue-600 border-b-2 border-blue-600 font-medium';
-                signupTab.className='tab-btn py-2 px-4 text-gray-500';
-            }else{
-                loginForm.classList.add('hidden'); signupForm.classList.remove('hidden');
-                signupTab.className='tab-btn py-2 px-4 text-blue-600 border-b-2 border-blue-600 font-medium';
-                loginTab.className='tab-btn py-2 px-4 text-gray-500';
-            }
-        }
-
-        async function checkUserSession(){
-            let { data:{ session } } = await supabase.auth.getSession();
-            if(session?.user){
-                currentUser = session.user;
-                userStatus.innerHTML = `<i class="fas fa-user-circle"></i> ${currentUser.email}`;
-                authBtnContainer.innerHTML = `<button id="logoutBtn" class="text-red-500 text-sm"><i class="fas fa-sign-out-alt"></i> 登出</button>`;
-                document.getElementById('logoutBtn')?.addEventListener('click', async ()=>{ await supabase.auth.signOut(); showToast('已登出','success'); checkUserSession(); });
-                authCard.classList.add('hidden'); customerPanel.classList.remove('hidden');
-                await loadCustomers();
-            }else{
-                currentUser = null;
-                userStatus.innerHTML = '未登录';
-                authBtnContainer.innerHTML = '';
-                authCard.classList.remove('hidden'); customerPanel.classList.add('hidden');
-                allCustomers = []; renderTable();
-            }
-        }
-
-        // 管理员快速登录：填充预设邮箱密码并触发登录
-        function quickAdminLogin(){
-            document.getElementById('loginEmail').value = 'admin@crm.com';
-            document.getElementById('loginPassword').value = 'Admin123456';
-            handleLogin('loginEmail','loginPassword');
-        }
-
-        function bindEvents(){
-            loginTab.onclick = ()=>setAuthTab('login');
-            signupTab.onclick = ()=>setAuthTab('signup');
-            gotoSignup.onclick = (e)=>{ e.preventDefault(); setAuthTab('signup'); };
-            doLogin.onclick = ()=>handleLogin('loginEmail','loginPassword');
-            doSignup.onclick = handleSignup;
-            addBtn.onclick = openAdd;
-            closeModal.onclick = closeModalFunc;
-            cancelModal.onclick = closeModalFunc;
-            saveCustomerBtn.onclick = saveCustomer;
-            modal.addEventListener('click',(e)=>{ if(e.target===modal) closeModalFunc(); });
-            if(quickAdminBtn) quickAdminBtn.onclick = quickAdminLogin;
-        }
-
-        async function init(){
-            await initSupabase();
-            bindEvents();
-            supabase.auth.onAuthStateChange(()=>checkUserSession());
-            await checkUserSession();
-            await checkDbReady();
-        }
-        init();
-        console.log("%c✅ 系统已启动。如无法注册，请使用「管理员快速登录」按钮，或按顶部指引创建管理员账户。","color:#16a34a; font-size:14px");
-    </script>
-    <div class="text-center text-xs text-gray-400 py-4 border-t mt-8 max-w-7xl mx-auto">
-        <i class="fas fa-cloud-upload-alt"></i> 托管于 GitHub Pages | 数据安全存储在 Supabase
-    </div>
+        });
+        
+        // 增加螢幕邊緣滑動手勢？不加入，避免干擾按鈕，保持乾淨
+        // 但如果需要，保持簡單，只留按鈕確保穩定。
+        
+        // 初始化顯示
+        updateSlides();
+        
+        // 為避免任何因 CSS 動畫造成的異常，手動確保第一頁滾動置頂
+        if (slidesArea) slidesArea.scrollTop = 0;
+        
+        // 額外：針對 iPhone 上的 :active 樣式在觸控時快速反應 (無需額外處理)
+        // 所有按鈕都有 active 回饋，使用者會有明確點擊感
+        
+        // 小細節：如果觸及最後一頁，按鈕 disabled 樣式會呈現半透明，無法點擊，完全符合需求
+    })();
+</script>
 </body>
 </html>

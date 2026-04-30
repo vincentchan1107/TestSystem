@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>AI速成班講座｜ACHIEVER 手機簡報 (iPhone優化版)</title>
+    <title>AI速成班講座｜ACHIEVER 手機簡報 (林SIR在DAVE之後)</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; /* 移除iPhone點擊灰底 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -22,7 +22,6 @@
             padding: 16px;
         }
 
-        /* 手機主容器 */
         .presentation-container {
             max-width: 600px;
             width: 100%;
@@ -35,10 +34,8 @@
             flex-direction: column;
             height: 85vh;
             max-height: 800px;
-            transition: all 0.2s ease;
         }
 
-        /* 標題列 */
         .title-bar {
             padding: 18px 24px 10px 24px;
             background: white;
@@ -60,17 +57,15 @@
             margin-top: 4px;
         }
 
-        /* 幻燈片區域 */
         .slides-area {
             flex: 1;
             overflow-y: auto;
             padding: 20px 24px 28px 24px;
             scroll-behavior: smooth;
             background: #ffffff;
-            -webkit-overflow-scrolling: touch; /* iPhone平滑滾動 */
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* 每張投影片 */
         .slide {
             display: none;
             animation: fade 0.2s ease-out;
@@ -84,7 +79,6 @@
             display: block;
         }
 
-        /* 大字舒適 */
         .slide p {
             margin-bottom: 1.2rem;
             font-size: 1.28rem;
@@ -98,13 +92,6 @@
             color: #0f3b5c;
             border-left: 5px solid #2c7da0;
             padding-left: 16px;
-        }
-
-        .slide h4 {
-            font-size: 1.4rem;
-            font-weight: 620;
-            margin: 1.2rem 0 0.5rem 0;
-            color: #1e4a6b;
         }
 
         .slide .highlight {
@@ -124,7 +111,7 @@
             font-weight: 500;
         }
 
-        .slide ul, .slide .checklist {
+        .slide ul {
             margin: 0.8rem 0 1rem 1.4rem;
             padding-left: 0.2rem;
         }
@@ -159,7 +146,6 @@
             to { opacity: 1; transform: translateY(0);}
         }
 
-        /* 導航列 — 大按鈕，iPhone 友善 */
         .nav-bar {
             background: #ffffff;
             border-top: 1px solid #e9eef3;
@@ -186,16 +172,13 @@
             flex: 1;
             text-align: center;
             letter-spacing: 1px;
-            /* iPhone 點擊區域加大 */
             touch-action: manipulation;
             -webkit-tap-highlight-color: rgba(0,0,0,0.05);
         }
 
-        /* 按鈕按下回饋 */
         .nav-btn:active {
             background: #dce3ec;
             transform: scale(0.96);
-            transition: 0.02s;
         }
 
         .nav-btn:disabled {
@@ -215,7 +198,6 @@
             white-space: nowrap;
         }
 
-        /* 手機細微調整 */
         @media (max-width: 500px) {
             .slides-area {
                 padding: 16px 20px 24px 20px;
@@ -236,7 +218,6 @@
             }
         }
 
-        /* 滾動條美觀 */
         .slides-area::-webkit-scrollbar {
             width: 4px;
         }
@@ -297,9 +278,9 @@
             <div class="quote">⚠️ <strong>簡單講：你唔用AI，你嘅對手就會用AI超越你。</strong></div>
         </div>
 
-        <!-- 投影片 5 : 過渡 + DAVE 介紹 -->
+        <!-- 投影片 5 : 實戰專家 DAVE (原第6張，移到林SIR前面) -->
         <div class="slide" data-index="4">
-            <p>🚀 咁究竟點樣開始？今日第一個環節，我哋請嚟實戰專家 <strong>DAVE</strong>。</p>
+            <p>🚀 咁究竟點樣開始實戰？今日第一個環節，我哋請嚟實戰專家 <strong>DAVE</strong>。</p>
             <p>DAVE 會用真實案例同你講解：</p>
             <ul>
                 <li>✅ 點樣用指令控制AI剪片，快速建立自己公司品牌？</li>
@@ -308,10 +289,20 @@
             <div class="applause">👏🏼 掌聲有請 DAVE！👏🏼</div>
         </div>
 
-        <!-- 投影片 6 : DAVE後 + 系統整合 + TIMOTHY -->
+        <!-- 投影片 6 : 林SIR環節 (原第5張，現在放在DAVE之後) 感謝DAVE + 介紹林SIR -->
         <div class="slide" data-index="5">
-            <p>🎙️ <strong>多謝DAVE嘅精彩分享。</strong><br>
-            學完點樣用AI做市場推廣同自動化任務，我哋再進一步：<strong>點樣將AI直接嵌入你公司嘅核心系統？</strong></p>
+            <p>🎙️ <strong>多謝DAVE嘅精彩分享！</strong> 我哋學識咗點樣用AI剪片同自動化營運。</p>
+            <p>😟 當然到現在重有好多人對AI係有啲陌生，有人覺得AI你想叫佢做既野/查既野，AI既回覆成日都唔係你既意思，唔到你想要既資訊，所以唔想用。</p>
+            <p>🤝 但係你有無諗過其實同AI傾計都先建立關聯？</p>
+            <p>🏆 今日我地既講師相當利害：佢 <strong>2006年香港十大傑出青年</strong>、資深網絡安全同談判專家；國際演講會全國演講冠軍、前南中國大區總監，同埋 <strong>Tech Talk Toastmasters</strong> 嘅創會指導 。</p>
+            <p>⏱️ 佢今日會用以下10分鐘時間同大家分享 <strong>「AI時代7分鐘說服力」</strong>。</p>
+            <div class="applause">👏 掌聲有請 <strong>SEAN LIN 林SIR</strong>！👏</div>
+        </div>
+
+        <!-- 投影片 7 : TIMOTHY 系統整合環節 -->
+        <div class="slide" data-index="6">
+            <p>🎙️ <strong>多謝林SIR嘅精彩分享！</strong> 我哋明白同AI建立關係之後，就可以更有效運用AI達成目標。</p>
+            <p>📌 學完點樣用AI做市場推廣同自動化任務，我哋再進一步：<strong>點樣將AI直接嵌入你公司嘅核心系統？</strong></p>
             <p>例如你公司用緊嘅系統，點樣可以同AI打通，<br>
             由「人搵數據」變成「<strong>AI主動提醒你邊張單就快過期、邊個流程可以慳錢</strong>」——<strong>係咪好吸引？</strong></p>
             <p>第二位講者 <strong>TIMOTHY</strong> 會同你分享 <strong>AI企業方案模塊</strong>，<br>
@@ -319,17 +310,17 @@
             <div class="applause">🤝 掌聲有請 TIMOTHY！🤝</div>
         </div>
 
-        <!-- 投影片 7 : 總結 + 金句 + 會後行動 -->
-        <div class="slide" data-index="6">
+        <!-- 投影片 8 : 總結 + 金句 + 會後行動 -->
+        <div class="slide" data-index="7">
             <p>🏆 <strong>多謝TIMOTHY。</strong><br>
-            今日兩個環節，由業務實踐到系統整合，相信大家都睇到AI唔再係遙遠概念，而係幫你企業賺到盡、快人一步嘅工具。</p>
+            今日幾個環節，由業務實踐、溝通說服到系統整合，相信大家都睇到AI唔再係遙遠概念，而係幫你企業賺到盡、快人一步嘅工具。</p>
             <div class="quote">💎 <strong>記住：AI唔會取代你，但識用AI嘅同行會取代你。</strong></div>
             <p>📞 如果你聽完之後，想知具體點樣喺你公司落地、或者想攞更多案例同建議，歡迎活動後直接向我哋同事查詢，或者可以約定個會議、交低卡片，我哋會找顧問直接再聯絡你。</p>
             <p>🎁 另外入場既時候我地都比左份表大家，<strong>填完交番比我地門口同事</strong>，我地會有小禮物比番大家！</p>
         </div>
 
-        <!-- 投影片 8 : 謝幕 祝福 -->
-        <div class="slide" data-index="7">
+        <!-- 投影片 9 : 謝幕 祝福 -->
+        <div class="slide" data-index="8">
             <p>❤️ <strong>再次多謝各位嚟來臨</strong>，祝大家業務效率倍升，愈做愈輕鬆！</p>
             <p>✨ 下次活動再見！✨</p>
             <div class="stat-badge" style="text-align: center; margin-top: 1.8rem;">🚀 ACHIEVER × HKBN — 智慧企業・搶先一步</div>
@@ -338,32 +329,27 @@
 
     <div class="nav-bar">
         <button class="nav-btn" id="prevBtn">◀ 上一頁</button>
-        <span class="page-indicator" id="pageIndicator">1 / 8</span>
+        <span class="page-indicator" id="pageIndicator">1 / 9</span>
         <button class="nav-btn" id="nextBtn">下一頁 ▶</button>
     </div>
 </div>
 
 <script>
     (function() {
-        // DOM 元素
         const slides = document.querySelectorAll('.slide');
         const prevButton = document.getElementById('prevBtn');
         const nextButton = document.getElementById('nextBtn');
         const indicator = document.getElementById('pageIndicator');
         const slidesArea = document.getElementById('slidesArea');
 
-        // 確認所有元素都存在
         if (!slides.length || !prevButton || !nextButton || !indicator) {
-            console.warn('必要元件遺失，請檢查 HTML');
             return;
         }
 
         let currentIdx = 0;
         const totalSlides = slides.length;
 
-        // 更新投影片與按鈕狀態，並將內容區域捲回頂部
         function updateSlides() {
-            // 更新 active class
             slides.forEach((slide, idx) => {
                 if (idx === currentIdx) {
                     slide.classList.add('active');
@@ -371,21 +357,12 @@
                     slide.classList.remove('active');
                 }
             });
-
-            // 更新頁碼指示器
             indicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
-
-            // 按鈕禁用邏輯
             prevButton.disabled = (currentIdx === 0);
             nextButton.disabled = (currentIdx === totalSlides - 1);
-
-            // 每次翻頁後，把幻燈片區域捲動到最頂，方便閱讀新內容 (iPhone 友善)
-            if (slidesArea) {
-                slidesArea.scrollTop = 0;
-            }
+            if (slidesArea) slidesArea.scrollTop = 0;
         }
 
-        // 下一頁函式 (提供給事件與外部呼叫)
         function goToNext() {
             if (currentIdx < totalSlides - 1) {
                 currentIdx++;
@@ -393,7 +370,6 @@
             }
         }
 
-        // 上一頁函式
         function goToPrev() {
             if (currentIdx > 0) {
                 currentIdx--;
@@ -401,38 +377,8 @@
             }
         }
 
-        // ---- 按鈕事件綁定: 同時使用 click 與 touchstart 確保 iPhone 即時反應 ----
-        // 使用 touchstart 能提供最即時的觸控反饋，並防止雙擊縮放干擾
-        // 同時保留 click 以涵蓋所有情況 (滑鼠/鍵盤)
-        
-        const handleNext = (e) => {
-            // 防止事件冒泡造成干擾 (無副作用)
-            if (e) {
-                e.preventDefault?.();  // 不影響預設行為但避免潛在問題
-                e.stopPropagation?.();
-            }
-            goToNext();
-        };
-        
-        const handlePrev = (e) => {
-            if (e) {
-                e.preventDefault?.();
-                e.stopPropagation?.();
-            }
-            goToPrev();
-        };
-        
-        // 對下一頁按鈕增加兩個監聽器 (移動端觸控優先)
-        nextButton.addEventListener('touchstart', handleNext, { passive: false });
-        nextButton.addEventListener('click', handleNext);
-        
-        prevButton.addEventListener('touchstart', handlePrev, { passive: false });
-        prevButton.addEventListener('click', handlePrev);
-        
-        // 為確保按鈕在 disabled 狀態下依然無法觸發 (touchstart 也會檢查，但瀏覽器本身會根據 disabled 屬性屏蔽部分事件)
-        // 但 touchstart 在 disabled 按鈕上仍會觸發，需手動檢查
         function addDisabledGuard(btn, callback) {
-            const guarded = (e) => {
+            return (e) => {
                 if (btn.disabled) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -440,26 +386,31 @@
                 }
                 callback(e);
             };
-            return guarded;
         }
-        
-        // 重建監聽確保 disabled 時完全不觸發翻頁
-        // 移除舊的重新綁定更乾淨
-        const newNextHandler = addDisabledGuard(nextButton, handleNext);
-        const newPrevHandler = addDisabledGuard(prevButton, handlePrev);
-        
-        // 移除原先監聽再綁定安全版本
-        nextButton.removeEventListener('touchstart', handleNext);
-        nextButton.removeEventListener('click', handleNext);
-        prevButton.removeEventListener('touchstart', handlePrev);
-        prevButton.removeEventListener('click', handlePrev);
-        
-        nextButton.addEventListener('touchstart', newNextHandler, { passive: false });
-        nextButton.addEventListener('click', newNextHandler);
-        prevButton.addEventListener('touchstart', newPrevHandler, { passive: false });
-        prevButton.addEventListener('click', newPrevHandler);
-        
-        // 鍵盤左右鍵支援 (方便藍牙鍵盤或測試)
+
+        const handleNext = (e) => {
+            if (e) {
+                e.preventDefault?.();
+                e.stopPropagation?.();
+            }
+            goToNext();
+        };
+        const handlePrev = (e) => {
+            if (e) {
+                e.preventDefault?.();
+                e.stopPropagation?.();
+            }
+            goToPrev();
+        };
+
+        const guardedNext = addDisabledGuard(nextButton, handleNext);
+        const guardedPrev = addDisabledGuard(prevButton, handlePrev);
+
+        nextButton.addEventListener('touchstart', guardedNext, { passive: false });
+        nextButton.addEventListener('click', guardedNext);
+        prevButton.addEventListener('touchstart', guardedPrev, { passive: false });
+        prevButton.addEventListener('click', guardedPrev);
+
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') {
                 e.preventDefault();
@@ -469,20 +420,9 @@
                 if (!prevButton.disabled) goToPrev();
             }
         });
-        
-        // 增加螢幕邊緣滑動手勢？不加入，避免干擾按鈕，保持乾淨
-        // 但如果需要，保持簡單，只留按鈕確保穩定。
-        
-        // 初始化顯示
+
         updateSlides();
-        
-        // 為避免任何因 CSS 動畫造成的異常，手動確保第一頁滾動置頂
         if (slidesArea) slidesArea.scrollTop = 0;
-        
-        // 額外：針對 iPhone 上的 :active 樣式在觸控時快速反應 (無需額外處理)
-        // 所有按鈕都有 active 回饋，使用者會有明確點擊感
-        
-        // 小細節：如果觸及最後一頁，按鈕 disabled 樣式會呈現半透明，無法點擊，完全符合需求
     })();
 </script>
 </body>

@@ -1,429 +1,1086 @@
-<!DOCTYPE html>
-<html lang="zh-HK">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>AI速成班講座｜ACHIEVER 手機簡報 (林SIR在DAVE之後)</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+﻿<!DOCTYPE html>
+<html lang="zh-HK"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 自動排更系統｜Achiever Technology</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #001a3a;
+      --royal: #0056b3;
+      --blue-mid: #0a4da3;
+      --teal: #00ced1;
+      --teal-glow: rgba(0, 206, 209, 0.4);
+      --white: #ffffff;
+      --white-70: rgba(255,255,255,0.88);
+      --white-40: rgba(255,255,255,0.65);
+      --card-bg: rgba(255,255,255,0.06);
+      --card-border: rgba(255,255,255,0.12);
+    }
 
-        body {
-            background: #f1f5f9;
-            font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans', 'PingFang HK', 'Microsoft YaHei', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 16px;
-        }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .presentation-container {
-            max-width: 600px;
-            width: 100%;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 44px;
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.02);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 85vh;
-            max-height: 800px;
-        }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', 'Microsoft JhengHei', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+    }
 
-        .title-bar {
-            padding: 18px 24px 10px 24px;
-            background: white;
-            border-bottom: 1px solid #eef2f6;
-        }
-        .title-bar h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-            background: linear-gradient(135deg, #1e2b3c, #2a4b6e);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 4px;
-        }
-        .title-bar p {
-            font-size: 0.75rem;
-            color: #5b6e8c;
-            margin-top: 4px;
-        }
+    /* ── Background orbs ── */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: linear-gradient(135deg, #001a3a 0%, #002b5c 40%, #0056b3 100%);
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(60px); opacity: 0.28;
+      animation: orbFloat 18s ease-in-out infinite;
+    }
+    .orb-1 { width: 500px; height: 500px; background: #0056b3; top: -10%; right: -5%; }
+    .orb-2 { width: 350px; height: 350px; background: var(--teal); bottom: 10%; left: -5%; animation-delay: -4s; }
+    .orb-3 { width: 250px; height: 250px; background: #1a6fd4; top: 50%; left: 40%; animation-delay: -8s; opacity: 0.2; }
 
-        .slides-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 24px 28px 24px;
-            scroll-behavior: smooth;
-            background: #ffffff;
-            -webkit-overflow-scrolling: touch;
-        }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -20px) scale(1.05); }
+      66% { transform: translate(-20px, 30px) scale(0.95); }
+    }
 
-        .slide {
-            display: none;
-            animation: fade 0.2s ease-out;
-            font-size: 1.28rem;
-            line-height: 1.55;
-            color: #0a1c2f;
-            word-break: break-word;
-        }
+    /* ── Frame border ── */
+    .frame {
+      position: fixed; inset: 20px; z-index: 1; pointer-events: none;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 16px;
+    }
 
-        .slide.active {
-            display: block;
-        }
+    /* ── Brand header ── */
+    .brand-bar {
+      position: fixed; top: 32px; left: 40px; z-index: 100;
+      display: flex; align-items: center; gap: 12px;
+      opacity: 0; animation: fadeDown 0.8s 0.3s forwards;
+    }
+    .brand-bar .company { font-size: 11px; color: var(--teal); letter-spacing: 0.08em; font-weight: 600; }
+    .brand-bar .logo-text { font-size: 13px; font-weight: 700; color: var(--white); }
+    .brand-bar .tagline { font-size: 10px; color: var(--white-70); font-style: italic; }
 
-        .slide p {
-            margin-bottom: 1.2rem;
-            font-size: 1.28rem;
-            font-weight: 460;
-        }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .slide h3 {
-            font-size: 1.65rem;
-            font-weight: 700;
-            margin: 1rem 0 0.8rem 0;
-            color: #0f3b5c;
-            border-left: 5px solid #2c7da0;
-            padding-left: 16px;
-        }
+    /* ── Slides container ── */
+    .deck { position: relative; width: 100%; height: 100%; z-index: 2; }
 
-        .slide .highlight {
-            background: #ffe7b3;
-            padding: 0.1rem 0.3rem;
-            border-radius: 12px;
-            font-weight: 500;
-            display: inline-block;
-        }
+    .slide {
+      position: absolute; inset: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      padding: 80px 60px 100px 60px;
+      opacity: 0; visibility: hidden;
+      transform: translateX(60px);
+      transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1),
+                  transform 0.7s cubic-bezier(0.4,0,0.2,1),
+                  visibility 0.7s;
+    }
+    .slide.active {
+      opacity: 1; visibility: visible; transform: translateX(0);
+    }
+    .slide.exit-left {
+      opacity: 0; transform: translateX(-60px);
+    }
+    .slide.exit-right {
+      opacity: 0; transform: translateX(60px);
+    }
 
-        .slide .stat-badge {
-            background: #eef2ff;
-            border-left: 5px solid #2c7da0;
-            padding: 1rem 1.2rem;
-            border-radius: 24px;
-            margin: 1rem 0;
-            font-weight: 500;
-        }
+    /* ── Left content ── */
+    .slide-content { display: flex; flex-direction: column; justify-content: center; padding-right: 20px; }
 
-        .slide ul {
-            margin: 0.8rem 0 1rem 1.4rem;
-            padding-left: 0.2rem;
-        }
-        .slide li {
-            margin: 0.65rem 0;
-            font-size: 1.22rem;
-        }
+    .slide-num {
+      font-size: 11px; color: var(--teal); letter-spacing: 0.15em;
+      margin-bottom: 16px; font-weight: 600;
+      opacity: 0; transform: translateY(20px);
+    }
+    .slide.active .slide-num { animation: slideUp 0.6s 0.1s forwards; }
 
-        .slide .applause {
-            background: #e9f4f8;
-            padding: 0.9rem 1rem;
-            border-radius: 60px;
-            text-align: center;
-            font-weight: 600;
-            color: #1f6392;
-            margin: 1.3rem 0;
-            font-size: 1.3rem;
-        }
+    .slide-title {
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 800; line-height: 1.15;
+      margin-bottom: 12px;
+      opacity: 0; transform: translateY(30px);
+    }
+    .slide.active .slide-title { animation: slideUp 0.7s 0.2s forwards; }
 
-        .slide .quote {
-            font-style: normal;
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 32px;
-            margin: 1rem 0;
-            font-weight: 500;
-            border: 1px solid #e2edf2;
-        }
+    .title-line {
+      width: 60px; height: 3px; background: var(--teal);
+      margin-bottom: 20px; border-radius: 2px;
+      transform: scaleX(0); transform-origin: left;
+    }
+    .slide.active .title-line { animation: lineGrow 0.6s 0.35s forwards; }
 
-        @keyframes fade {
-            from { opacity: 0; transform: translateY(6px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
+    @keyframes lineGrow { to { transform: scaleX(1); } }
 
-        .nav-bar {
-            background: #ffffff;
-            border-top: 1px solid #e9eef3;
-            padding: 14px 20px 22px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 18px;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.02);
-        }
+    .slide-value {
+      font-size: clamp(14px, 1.5vw, 18px);
+      color: var(--teal); font-weight: 600;
+      margin-bottom: 28px;
+      opacity: 0; transform: translateY(20px);
+    }
+    .slide.active .slide-value { animation: slideUp 0.6s 0.4s forwards; }
 
-        .nav-btn {
-            background: #f0f4f9;
-            border: none;
-            font-size: 1.6rem;
-            font-weight: 600;
-            padding: 14px 20px;
-            border-radius: 60px;
-            min-width: 110px;
-            color: #1e4a6b;
-            transition: all 0.15s ease;
-            cursor: pointer;
-            font-family: inherit;
-            flex: 1;
-            text-align: center;
-            letter-spacing: 1px;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: rgba(0,0,0,0.05);
-        }
+    .bullet-list { list-style: none; }
+    .bullet-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: clamp(14px, 1.35vw, 17px);
+      color: var(--white-70); line-height: 1.55; font-weight: 600;
+      margin-bottom: 14px;
+      opacity: 0; transform: translateX(-20px);
+    }
+    .slide.active .bullet-list li:nth-child(1) { animation: slideRight 0.5s 0.5s forwards; }
+    .slide.active .bullet-list li:nth-child(2) { animation: slideRight 0.5s 0.6s forwards; }
+    .slide.active .bullet-list li:nth-child(3) { animation: slideRight 0.5s 0.7s forwards; }
+    .slide.active .bullet-list li:nth-child(4) { animation: slideRight 0.5s 0.8s forwards; }
+    .slide.active .bullet-list li:nth-child(5) { animation: slideRight 0.5s 0.9s forwards; }
 
-        .nav-btn:active {
-            background: #dce3ec;
-            transform: scale(0.96);
-        }
+    .bullet-list li::before {
+      content: '›››'; color: var(--teal);
+      font-size: 10px; margin-top: 4px; flex-shrink: 0;
+      animation: chevronPulse 3s ease-in-out infinite;
+    }
+    .bullet-list li:nth-child(2)::before { animation-delay: 0.3s; }
+    .bullet-list li:nth-child(3)::before { animation-delay: 0.6s; }
+    .bullet-list li:nth-child(4)::before { animation-delay: 0.9s; }
+    .bullet-list li:nth-child(5)::before { animation-delay: 1.2s; }
 
-        .nav-btn:disabled {
-            opacity: 0.4;
-            transform: none;
-            cursor: not-allowed;
-            background: #eef2f6;
-        }
+    @keyframes chevronPulse {
+      0%, 100% { opacity: 0.6; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(4px); }
+    }
 
-        .page-indicator {
-            font-size: 1rem;
-            font-weight: 500;
-            background: #eef3fc;
-            padding: 8px 18px;
-            border-radius: 40px;
-            color: #1f6392;
-            white-space: nowrap;
-        }
+    @keyframes slideUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideRight {
+      to { opacity: 1; transform: translateX(0); }
+    }
 
-        @media (max-width: 500px) {
-            .slides-area {
-                padding: 16px 20px 24px 20px;
-            }
-            .slide {
-                font-size: 1.2rem;
-            }
-            .slide p {
-                font-size: 1.2rem;
-            }
-            .nav-btn {
-                padding: 12px 16px;
-                min-width: 90px;
-                font-size: 1.4rem;
-            }
-            .title-bar h2 {
-                font-size: 1.3rem;
-            }
-        }
+    /* ── Right visual panel ── */
+    .slide-visual {
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: translateY(40px) scale(0.95);
+    }
+    .slide.active .slide-visual {
+      animation: visualIn 0.9s 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes visualIn {
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
-        .slides-area::-webkit-scrollbar {
-            width: 4px;
-        }
-        .slides-area::-webkit-scrollbar-track {
-            background: #eef2f6;
-            border-radius: 10px;
-        }
-        .slides-area::-webkit-scrollbar-thumb {
-            background: #bac8d9;
-            border-radius: 10px;
-        }
-    </style>
+    .mockup-card {
+      width: 100%; max-width: 480px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      backdrop-filter: blur(14px);
+      padding: 24px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,206,209,0.08);
+      position: relative; overflow: hidden;
+    }
+    .mockup-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      animation: shimmer 4.5s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .mockup-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 16px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-dot.r { background: #ff5f57; }
+    .mockup-dot.y { background: #febc2e; }
+    .mockup-dot.g { background: #28c840; }
+    .mockup-title { font-size: 12px; color: var(--white-70); margin-left: 8px; }
+
+    /* ── Cover slide (slide 1) special layout ── */
+    .slide-cover {
+      grid-template-columns: 1fr;
+      text-align: left;
+      padding: 80px 80px 100px;
+    }
+    .slide-cover .slide-content { max-width: 700px; }
+
+    .flow-chain {
+      display: flex; align-items: center; gap: 0;
+      margin-top: 40px; flex-wrap: wrap; gap: 8px;
+      opacity: 0;
+    }
+    .slide.active .flow-chain { animation: slideUp 0.8s 1s forwards; }
+
+    .flow-step {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 10px 16px;
+      font-size: 13px; font-weight: 600; color: var(--white);
+      animation: flowPulse 4.5s ease-in-out infinite;
+    }
+    .flow-step .icon { font-size: 18px; }
+    .flow-arrow { color: var(--teal); font-size: 18px; font-weight: 700;
+      animation: arrowMove 1.5s ease-in-out infinite; }
+    .flow-step:nth-child(1) { animation-delay: 0s; }
+    .flow-step:nth-child(3) { animation-delay: 0.5s; }
+    .flow-step:nth-child(5) { animation-delay: 1s; }
+    .flow-step:nth-child(7) { animation-delay: 1.5s; }
+    .flow-step:nth-child(9) { animation-delay: 2s; }
+
+    @keyframes flowPulse {
+      0%, 100% { box-shadow: 0 0 0 0 var(--teal-glow); }
+      50% { box-shadow: 0 0 20px 4px var(--teal-glow); }
+    }
+    @keyframes arrowMove {
+      0%, 100% { transform: translateX(0); opacity: 0.6; }
+      50% { transform: translateX(4px); opacity: 1; }
+    }
+
+    .cover-visual {
+      position: absolute; right: 60px; top: 50%;
+      transform: translateY(-50%);
+      width: 380px; opacity: 0;
+    }
+    .slide.active .cover-visual { animation: visualIn 1s 0.5s forwards; }
+
+    .cover-img-wrap {
+      border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+    .cover-img-wrap img { width: 100%; display: block; }
+
+    /* ── Mockup UI elements ── */
+    .ui-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: center; }
+    .ui-label { font-size: 11px; color: var(--white-70); min-width: 70px; font-weight: 600; }
+    .ui-input {
+      flex: 1; background: rgba(255,255,255,0.08);
+      border: 1px solid var(--card-border); border-radius: 6px;
+      padding: 8px 12px; font-size: 12px; color: var(--white);
+    }
+    .ui-select { appearance: none; cursor: default; }
+    .ui-btn {
+      display: inline-block; padding: 8px 16px; border-radius: 6px;
+      font-size: 11px; font-weight: 600; border: none; cursor: default;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .ui-btn-primary { background: var(--teal); color: var(--navy); }
+    .ui-btn-secondary { background: rgba(255,255,255,0.1); color: var(--white); border: 1px solid var(--card-border); }
+    .ui-btn-danger { background: rgba(255,80,80,0.2); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.3); }
+    .ui-btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+    .ui-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .ui-table th {
+      background: rgba(0,206,209,0.15); color: var(--teal);
+      padding: 8px 10px; text-align: left; font-weight: 600;
+    }
+    .ui-table td {
+      padding: 8px 10px; border-bottom: 1px solid var(--card-border);
+      color: var(--white-70); font-weight: 600;
+    }
+    .ui-table tr:hover td { background: rgba(255,255,255,0.04); }
+
+    .ui-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ui-col-header {
+      font-size: 11px; font-weight: 700; color: var(--teal);
+      margin-bottom: 8px; padding-bottom: 6px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .rule-card {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 12px;
+      animation: cardFloat 6s ease-in-out infinite;
+    }
+    .rule-card:nth-child(2) { animation-delay: -1s; }
+    .rule-card:nth-child(3) { animation-delay: -2s; }
+    .rule-priority {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--teal); color: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; flex-shrink: 0;
+    }
+    .rule-text { font-size: 11px; color: var(--white-70); flex: 1; font-weight: 600; }
+    .rule-badge {
+      font-size: 9px; padding: 3px 8px; border-radius: 20px;
+      background: rgba(0,206,209,0.2); color: var(--teal); font-weight: 600;
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .toggle {
+      width: 36px; height: 20px; border-radius: 10px;
+      background: var(--teal); position: relative; flex-shrink: 0;
+    }
+    .toggle::after {
+      content: ''; position: absolute; right: 3px; top: 3px;
+      width: 14px; height: 14px; border-radius: 50%; background: white;
+    }
+    .toggle.off { background: rgba(255,255,255,0.2); }
+    .toggle.off::after { right: auto; left: 3px; }
+
+    .alert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .alert-block {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 12px;
+    }
+    .alert-block h4 { font-size: 11px; color: var(--teal); margin-bottom: 8px; }
+    .alert-block .mini-btn {
+      font-size: 10px; padding: 4px 10px; border-radius: 4px;
+      background: rgba(0,206,209,0.15); color: var(--teal); border: none;
+      margin-right: 4px; cursor: default;
+    }
+
+    /* Phone mockup */
+    .phone-frame {
+      width: 220px; margin: 0 auto;
+      background: #0d1f3c; border-radius: 28px;
+      border: 3px solid rgba(255,255,255,0.2);
+      padding: 16px 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      animation: phoneFloat 7s ease-in-out infinite;
+    }
+    @keyframes phoneFloat {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(-8px) rotate(1deg); }
+    }
+    .phone-notch {
+      width: 60px; height: 6px; background: rgba(255,255,255,0.15);
+      border-radius: 3px; margin: 0 auto 12px;
+    }
+    .phone-screen { font-size: 10px; }
+    .phone-nav { display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; }
+    .phone-tab {
+      padding: 4px 8px; border-radius: 12px; font-size: 9px;
+      background: rgba(255,255,255,0.08); color: var(--white-70); font-weight: 600;
+    }
+    .phone-tab.active { background: var(--teal); color: var(--navy); font-weight: 700; }
+    .phone-calendar {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin: 8px 0;
+    }
+    .cal-day {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      border-radius: 4px; font-size: 8px; background: rgba(255,255,255,0.05);
+      color: var(--white-70); font-weight: 600;
+    }
+    .cal-day.work { background: rgba(0,206,209,0.3); color: var(--white); }
+    .cal-day.off { background: rgba(100,149,237,0.3); }
+
+    .modal-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 16px;
+    }
+    .modal-box {
+      background: #0d2244; border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 16px; width: 80%;
+      animation: modalPop 1.4s cubic-bezier(0.34,1.56,0.64,1) infinite alternate;
+    }
+    @keyframes modalPop {
+      from { transform: scale(0.97); }
+      to { transform: scale(1); }
+    }
+
+    .event-list-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px; border-radius: 8px;
+      background: rgba(255,255,255,0.04); margin-bottom: 8px;
+      border-left: 3px solid var(--teal);
+    }
+    .event-date { font-size: 10px; color: var(--teal); font-weight: 700; min-width: 50px; }
+    .event-info { font-size: 11px; color: var(--white-70); font-weight: 600; }
+    .skill-tag {
+      display: inline-block; font-size: 9px; padding: 2px 8px;
+      border-radius: 10px; background: rgba(0,206,209,0.2); color: var(--teal);
+      margin: 2px;
+    }
+
+    /* ── Navigation ── */
+    .nav-bar {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      z-index: 100; display: flex; align-items: center; gap: 20px;
+    }
+    .nav-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.08); border: 1px solid var(--card-border);
+      color: var(--white); font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      backdrop-filter: blur(8px);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .nav-btn:hover { background: rgba(0,206,209,0.2); transform: scale(1.08); box-shadow: 0 0 20px var(--teal-glow); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+    .nav-dots { display: flex; gap: 8px; }
+    .nav-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.25); cursor: pointer;
+      transition: all 0.3s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .nav-dot.active { background: var(--teal); width: 24px; border-radius: 4px; box-shadow: 0 0 12px var(--teal-glow); }
+    .nav-dot:hover { background: rgba(0,206,209,0.6); }
+
+    .progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px; z-index: 200;
+      background: linear-gradient(90deg, var(--teal), var(--royal));
+      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 0 10px var(--teal-glow);
+    }
+
+    .slide-counter {
+      position: fixed; bottom: 40px; right: 48px; z-index: 100;
+      font-size: 12px; color: var(--white-40); letter-spacing: 0.1em;
+    }
+    .slide-counter span { color: var(--teal); font-weight: 700; }
+
+    .benefit-tag {
+      display: inline-block; margin-top: 20px;
+      padding: 6px 14px; border-radius: 20px;
+      background: rgba(0,206,209,0.12); border: 1px solid rgba(0,206,209,0.3);
+      font-size: 11px; color: var(--teal); font-weight: 600;
+      opacity: 0;
+    }
+    .slide.active .benefit-tag { animation: slideUp 0.5s 1.1s forwards; }
+
+    @media (max-width: 900px) {
+      .slide { grid-template-columns: 1fr; padding: 70px 30px 100px; overflow-y: auto; }
+      .slide-visual { display: none; }
+      .cover-visual { display: none; }
+    }
+  </style>
 </head>
 <body>
-<div class="presentation-container">
-    <div class="title-bar">
-        <h2>🤖 AI速成班 · 實戰講座</h2>
-        <p>ACHIEVER 主辦 | 點擊下方按鈕翻頁</p>
-    </div>
 
-    <div class="slides-area" id="slidesArea">
-        <!-- 投影片 1 : 開場歡迎 -->
-        <div class="slide active" data-index="0">
-            <p>🎤 各位來賓，歡迎大家嚟到 <strong>ACHIEVER</strong> 舉辦既 <strong>AI速成班</strong> 既講座！</p>
-            <p>我係今日嘅大會司儀 <strong>VINCENT</strong>，好多謝大家既來臨。</p>
-            <p>亦同時多謝我地既合作伙伴 <strong>HKBN</strong> 既協助，我地既活動都先可以咁成功 🎉</p>
-            <div class="quote">✨ 今日一齊拆解AI — 由生活應用，到真金白銀幫你慳成本！</div>
-        </div>
+<div class="bg-layer">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+<div class="frame"></div>
+<div class="progress-bar" id="progressBar"></div>
 
-        <!-- 投影片 2 : AI話題 + 互動提問 -->
-        <div class="slide" data-index="1">
-            <p>🔥 今日呢個活動，我哋會一齊拆解一個好Hit嘅話題——<strong>AI</strong>。</p>
-            <p>講起AI，我相信大家都應該聽唔少，我想問下大家<strong>有無到現在都未用過AI？</strong> 唔好怕醜舉一舉手睇下 🙋🏻‍♀️🙋🏽‍♂️</p>
-            <p>絕對了解相信今時今日AI都真係不停喺生活出現。<br>
-            有人會問下天氣，有人會叫佢安排下旅行行程，點至有啲人會同AI傾計⋯⋯</p>
-            <p>😆 唔係講笑，的確我公司有位同事成日都分享同AI傾計既趣事。</p>
-            <div class="stat-badge">💬 由娛樂到效率，AI已經不知不覺融入日常。</div>
-        </div>
-
-        <!-- 投影片 3 : 真金白銀慳成本 + 實例 -->
-        <div class="slide" data-index="2">
-            <p>📌 入番正題先，今日唔係同你講點樣同AI相處，而係講緊<strong>真金白銀、點樣幫你慳時間慳成本</strong>嘅實用嘢。</p>
-            <p>💡 我同你講個有趣嘅實例：<br>
-            以前想做個廣告或者想介紹下公司產品，又要自己諗點樣介紹，諗完又要搵人去拍去設計，拍完又要剪片⋯⋯等等等，唔好話幾個鐘，可能最少都要搞一兩日。</p>
-            <p>⚡️ 而家同你講打幾句指令，<strong class="highlight">三分鐘搞掂</strong>，仲要幫你自動配埋字幕、加埋品牌Logo。</p>
-            <p>🤖 仲有老闆用<strong>AI Agent</strong>，即係AI助手，自動覆客、自動追數、自動安排會議，夜晚瞓覺嗰陣佢仲幫你做緊生意——<strong>你話係咪仲好過神奇？</strong></p>
-        </div>
-
-        <!-- 投影片 4 : 國際數據 + 警醒句 -->
-        <div class="slide" data-index="3">
-            <p>📊 <strong>數據唔呃人：</strong><br>
-            根據國際研究機構 Gartner 同麥肯錫嘅最新報告：</p>
-            <ul>
-                <li>📌 截至2025年底，全球已有超過 <strong>55%</strong> 嘅企業喺至少一個業務範疇使用AI；</li>
-                <li>📌 預計到2026年底，呢個數字會升到超過 <strong>72%</strong>。</li>
-                <li>📈 而成功應用AI嘅企業，業務效率平均提升 <strong>30%至45%</strong>，營運成本平均降低 <strong>四成</strong>。</li>
-            </ul>
-            <div class="quote">⚠️ <strong>簡單講：你唔用AI，你嘅對手就會用AI超越你。</strong></div>
-        </div>
-
-        <!-- 投影片 5 : 實戰專家 DAVE (原第6張，移到林SIR前面) -->
-        <div class="slide" data-index="4">
-            <p>🚀 咁究竟點樣開始實戰？今日第一個環節，我哋請嚟實戰專家 <strong>DAVE</strong>。</p>
-            <p>DAVE 會用真實案例同你講解：</p>
-            <ul>
-                <li>✅ 點樣用指令控制AI剪片，快速建立自己公司品牌？</li>
-                <li>✅ 點樣用AI Agent，幫你企業自動化運作，由客戶服務到內部流程一手包辦？</li>
-            </ul>
-            <div class="applause">👏🏼 掌聲有請 DAVE！👏🏼</div>
-        </div>
-
-        <!-- 投影片 6 : 林SIR環節 (原第5張，現在放在DAVE之後) 感謝DAVE + 介紹林SIR -->
-        <div class="slide" data-index="5">
-            <p>🎙️ <strong>多謝DAVE嘅精彩分享！</strong> 我哋學識咗點樣用AI剪片同自動化營運。</p>
-            <p>😟 當然到現在重有好多人對AI係有啲陌生，有人覺得AI你想叫佢做既野/查既野，AI既回覆成日都唔係你既意思，唔到你想要既資訊，所以唔想用。</p>
-            <p>🤝 但係你有無諗過其實同AI傾計都先建立關聯？</p>
-            <p>🏆 今日我地既講師相當利害：佢 <strong>2006年香港十大傑出青年</strong>、資深網絡安全同談判專家；國際演講會全國演講冠軍、前南中國大區總監，同埋 <strong>Tech Talk Toastmasters</strong> 嘅創會指導 。</p>
-            <p>⏱️ 佢今日會用以下10分鐘時間同大家分享 <strong>「AI時代7分鐘說服力」</strong>。</p>
-            <div class="applause">👏 掌聲有請 <strong>SEAN LIN 林SIR</strong>！👏</div>
-        </div>
-
-        <!-- 投影片 7 : TIMOTHY 系統整合環節 -->
-        <div class="slide" data-index="6">
-            <p>🎙️ <strong>多謝林SIR嘅精彩分享！</strong> 我哋明白同AI建立關係之後，就可以更有效運用AI達成目標。</p>
-            <p>📌 學完點樣用AI做市場推廣同自動化任務，我哋再進一步：<strong>點樣將AI直接嵌入你公司嘅核心系統？</strong></p>
-            <p>例如你公司用緊嘅系統，點樣可以同AI打通，<br>
-            由「人搵數據」變成「<strong>AI主動提醒你邊張單就快過期、邊個流程可以慳錢</strong>」——<strong>係咪好吸引？</strong></p>
-            <p>第二位講者 <strong>TIMOTHY</strong> 會同你分享 <strong>AI企業方案模塊</strong>，<br>
-            教你點樣將AI「套入」現有嘅企業系統，<strong>唔使砍掉重練</strong>，都可以即刻升級做智能企業。</p>
-            <div class="applause">🤝 掌聲有請 TIMOTHY！🤝</div>
-        </div>
-
-        <!-- 投影片 8 : 總結 + 金句 + 會後行動 -->
-        <div class="slide" data-index="7">
-            <p>🏆 <strong>多謝TIMOTHY。</strong><br>
-            今日幾個環節，由業務實踐、溝通說服到系統整合，相信大家都睇到AI唔再係遙遠概念，而係幫你企業賺到盡、快人一步嘅工具。</p>
-            <div class="quote">💎 <strong>記住：AI唔會取代你，但識用AI嘅同行會取代你。</strong></div>
-            <p>📞 如果你聽完之後，想知具體點樣喺你公司落地、或者想攞更多案例同建議，歡迎活動後直接向我哋同事查詢，或者可以約定個會議、交低卡片，我哋會找顧問直接再聯絡你。</p>
-            <p>🎁 另外入場既時候我地都比左份表大家，<strong>填完交番比我地門口同事</strong>，我地會有小禮物比番大家！</p>
-        </div>
-
-        <!-- 投影片 9 : 謝幕 祝福 -->
-        <div class="slide" data-index="8">
-            <p>❤️ <strong>再次多謝各位嚟來臨</strong>，祝大家業務效率倍升，愈做愈輕鬆！</p>
-            <p>✨ 下次活動再見！✨</p>
-            <div class="stat-badge" style="text-align: center; margin-top: 1.8rem;">🚀 ACHIEVER × HKBN — 智慧企業・搶先一步</div>
-        </div>
-    </div>
-
-    <div class="nav-bar">
-        <button class="nav-btn" id="prevBtn">◀ 上一頁</button>
-        <span class="page-indicator" id="pageIndicator">1 / 9</span>
-        <button class="nav-btn" id="nextBtn">下一頁 ▶</button>
-    </div>
+<div class="brand-bar">
+  <div>
+    <div class="company">Achiever Technology Limited</div>
+    <div class="logo-text">Achiever</div>
+    <div class="tagline">Digital Transformation. Empowered.</div>
+  </div>
 </div>
 
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: Cover / Overview -->
+  <section class="slide slide-cover active" data-slide="0">
+    <div class="slide-content">
+      <div class="slide-num">01 / 10</div>
+      <h1 class="slide-title">AI 自動排更系統<br>（含員工手機）</h1>
+      <div class="title-line"></div>
+      <p class="slide-value">用規則自動化排更流程</p>
+      <ul class="bullet-list">
+        <li>統一設定與流程鎖定</li>
+        <li>支援標準工時與需求配置</li>
+        <li>以規則自動生成更表</li>
+        <li>提供警示與活動編排</li>
+        <li>員工可在手機端提交與查看</li>
+      </ul>
+      <div class="flow-chain">
+        <div class="flow-step"><span class="icon">⚙️</span> 設定</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="icon">📋</span> 規則</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="icon">📅</span> 排更</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="icon">🔔</span> 通知</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step"><span class="icon">📱</span> 員工入口</div>
+      </div>
+      <div class="benefit-tag">✦ 一站式智能人力資源管理方案</div>
+    </div>
+    <div class="cover-visual">
+      <div class="cover-img-wrap">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <defs>
+            <linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#001a3a"></stop>
+              <stop offset="50%" style="stop-color:#0056b3"></stop>
+              <stop offset="100%" style="stop-color:#002b5c"></stop>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="300" fill="url(#bgG)"></rect>
+          <rect x="20" y="20" width="360" height="260" rx="12" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1"></rect>
+          <text x="30" y="50" fill="#00ced1" font-size="11" font-family="Inter,sans-serif">Achiever Technology Limited</text>
+          <text x="30" y="130" fill="white" font-size="22" font-weight="800" font-family="Inter,sans-serif">HUMAN RESOURCE</text>
+          <text x="30" y="158" fill="white" font-size="22" font-weight="800" font-family="Inter,sans-serif">MANAGEMENT SOLUTION</text>
+          <rect x="30" y="170" width="60" height="3" fill="#00ced1" rx="1"></rect>
+          <text x="30" y="200" fill="#00ced1" font-size="16" font-family="monospace">›››</text>
+          <text x="30" y="270" fill="white" font-size="13" font-weight="700" font-family="Inter,sans-serif">Achiever</text>
+          <text x="30" y="286" fill="rgba(255,255,255,0.6)" font-size="9" font-style="italic" font-family="Inter,sans-serif">Digital Transformation. Empowered.</text>
+          <polygon points="280,0 400,0 400,300 180,300" fill="rgba(255,255,255,0.04)"></polygon>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: Monthly Settings -->
+  <section class="slide" data-slide="1">
+    <div class="slide-content">
+      <div class="slide-num">02 / 10</div>
+      <h2 class="slide-title">每月/每週/每日<br>流程鎖定</h2>
+      <div class="title-line"></div>
+      <p class="slide-value">確保排更流程可控</p>
+      <ul class="bullet-list">
+        <li>支援 Monthly / Weekly / Daily</li>
+        <li>提交 SV（Submit SV）</li>
+        <li>提交 OM（Submit OM）</li>
+        <li>發佈 OM（Publish OM）</li>
+      </ul>
+      <div class="benefit-tag">✦ 20號前更新工時，21號自動鎖定</div>
+    </div>
+    <div class="slide-visual">
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+          <span class="mockup-title">月設定與流程鎖定</span>
+        </div>
+        <div class="ui-row">
+          <span class="ui-label">選擇年月</span>
+          <div class="ui-input ui-select">2025 年 11 月 ▾</div>
+        </div>
+        <div class="ui-btn-group">
+          <button class="ui-btn ui-btn-secondary">套用月份</button>
+          <button class="ui-btn ui-btn-primary">提交 SV</button>
+          <button class="ui-btn ui-btn-primary">提交 OM</button>
+          <button class="ui-btn ui-btn-primary" style="background:#28a745;color:#fff">OM 發佈</button>
+        </div>
+        <div style="margin-top:16px;padding:12px;background:rgba(0,206,209,0.08);border-radius:8px;font-size:11px;color:var(--white-70)">
+          📌 依規則：20號前更新下月每日標準可用工時；21號自動鎖定報更
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: Daily Standard Hours -->
+  <section class="slide" data-slide="2">
+    <div class="slide-content">
+      <div class="slide-num">03 / 10</div>
+      <h2 class="slide-title">每日標準工時<br>與人手需求</h2>
+      <div class="title-line"></div>
+      <p class="slide-value">把需求轉成可排更條件</p>
+      <ul class="bullet-list">
+        <li>支援不同 property / sites</li>
+        <li>設定工作日/假日工時要求</li>
+        <li>設定工作日/假日所需人手</li>
+        <li>支援條件變量（顏值/年齡等）</li>
+      </ul>
+      <div class="benefit-tag">✦ 平日12h/5人，假日14h/7人可逐日覆寫</div>
+    </div>
+    <div class="slide-visual">
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+          <span class="mockup-title">標準工時與需求</span>
+        </div>
+        <div class="ui-row">
+          <span class="ui-label">選擇物業</span>
+          <div class="ui-input ui-select">太古廣場 ▾</div>
+        </div>
+        <div class="ui-two-col" style="margin-top:12px">
+          <div>
+            <div class="ui-col-header">📅 工作日</div>
+            <div class="ui-row"><span class="ui-label">工時</span><div class="ui-input">12 小時</div></div>
+            <div class="ui-row"><span class="ui-label">人數</span><div class="ui-input">5 人</div></div>
+          </div>
+          <div>
+            <div class="ui-col-header">🎉 假日</div>
+            <div class="ui-row"><span class="ui-label">工時</span><div class="ui-input">14 小時</div></div>
+            <div class="ui-row"><span class="ui-label">人數</span><div class="ui-input">7 人</div></div>
+          </div>
+        </div>
+        <div class="ui-row" style="margin-top:10px">
+          <span class="ui-label">顏值</span><div class="ui-input ui-select">3 星 ▾</div>
+          <span class="ui-label">年齡</span><div class="ui-input ui-select">23-35歲 ▾</div>
+        </div>
+        <button class="ui-btn ui-btn-primary" style="margin-top:10px;width:100%">套用至本月</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: Custom Shifts -->
+  <section class="slide" data-slide="3">
+    <div class="slide-content">
+      <div class="slide-num">04 / 10</div>
+      <h2 class="slide-title">自訂標準更<br>（含午夜班）</h2>
+      <div class="title-line"></div>
+      <p class="slide-value">更表更貼近實際營運</p>
+      <ul class="bullet-list">
+        <li>設定 Roster Code</li>
+        <li>設定 Start / End time</li>
+        <li>顯示 Total Working Hours</li>
+        <li>支援 midnight shift（午夜班）</li>
+        <li>支援易設定與調整</li>
+      </ul>
+      <div class="benefit-tag">✦ A-E標準更＋自由更靈活配置</div>
+    </div>
+    <div class="slide-visual">
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+          <span class="mockup-title">自定標準更</span>
+        </div>
+        <table class="ui-table">
+          <thead>
+            <tr><th>代號</th><th>開始</th><th>結束</th><th>工時</th><th>操作</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A</td><td>09:00</td><td>16:00</td><td>7h</td><td><span style="color:var(--teal)">✏️ 🗑️</span></td></tr>
+            <tr><td>B</td><td>10:00</td><td>18:00</td><td>8h</td><td><span style="color:var(--teal)">✏️ 🗑️</span></td></tr>
+            <tr><td>M</td><td>22:00</td><td>06:00</td><td>8h</td><td><span style="color:var(--teal)">✏️ 🗑️</span></td></tr>
+            <tr><td>#F</td><td>13:00</td><td>21:00</td><td>8h</td><td><span style="color:var(--teal)">✏️ 🗑️</span></td></tr>
+          </tbody>
+        </table>
+        <div class="ui-btn-group" style="margin-top:12px">
+          <button class="ui-btn ui-btn-primary">新增標準更</button>
+          <button class="ui-btn ui-btn-secondary">新增自由更</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: Staff Submission -->
+  <section class="slide" data-slide="4">
+    <div class="slide-content">
+      <div class="slide-num">05 / 10</div>
+      <h2 class="slide-title">員工提交與<br>請假/例假處理</h2>
+      <div class="title-line"></div>
+      <p class="slide-value">讓員工意願快速納入排更</p>
+      <ul class="bullet-list">
+        <li>設定招募類型（FT/PT等）</li>
+        <li>設定偏好上班日</li>
+        <li>支援快速與簡易調整</li>
+      </ul>
+      <div class="benefit-tag">✦ PT 19-20日報更，FT申請例假</div>
+    </div>
+    <div class="slide-visual">
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+          <span class="mockup-title">報更與例假/假期</span>
+        </div>
+        <table class="ui-table">
+          <thead>
+            <tr><th>員工</th><th>身份</th><th>468</th><th>例假日</th><th>操作</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A001 張偉明</td><td>FT</td><td>—</td><td>15, 22</td><td><span style="color:var(--teal)">編輯</span></td></tr>
+            <tr><td>A015 陳詩敏</td><td>PT</td><td>✓</td><td>—</td><td><span style="color:var(--teal)">編輯</span></td></tr>
+            <tr><td>B003 李志強</td><td>PT</td><td>✗</td><td>—</td><td><span style="color:var(--teal)">編輯</span></td></tr>
+            <tr><td>C007 王美玲</td><td>Casual</td><td>—</td><td>18</td><td><span style="color:var(--teal)">編輯</span></td></tr>
+          </tbody>
+        </table>
+        <button class="ui-btn ui-btn-primary" style="margin-top:12px;width:100%">安排例假及顯示PT報更</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: Auto Scheduling Rules -->
+  <section class="slide" data-slide="5">
+    <div class="slide-content">
+      <div class="slide-num">06 / 10</div>
+      <h2 class="slide-title">自動排更<br>規則引擎</h2>
+      <div class="title-line"></div>
+      <p class="slide-value">用規則自動生成最適更表</p>
+      <ul class="bullet-list">
+        <li>新增排更規則設定</li>
+        <li>規則套用優先順序</li>
+        <li>支援不同 sites 套用</li>
+        <li>468 Ordinance 合規</li>
+      </ul>
+      <div class="benefit-tag">✦ FT → 468PT → 非468PT 智能排序</div>
+    </div>
+    <div class="slide-visual">
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+          <span class="mockup-title">自動編更規則</span>
+        </div>
+        <div class="rule-card">
+          <div class="rule-priority">1</div>
+          <div class="rule-text">營業時間內至少1人當值</div>
+          <span class="rule-badge">必須</span>
+        </div>
+        <div class="rule-card">
+          <div class="rule-priority">2</div>
+          <div class="rule-text">連續工作5天，第6天不可排更</div>
+          <span class="rule-badge">勞工法例</span>
+        </div>
+        <div class="rule-card">
+          <div class="rule-priority">3</div>
+          <div class="rule-text">通宵更後一天不排A更</div>
+          <span class="rule-badge">休息</span>
+        </div>
+        <div class="rule-card">
+          <div class="rule-priority">4</div>
+          <div class="rule-text">PT工時不超過68小時（468合規）</div>
+          <span class="rule-badge">468</span>
+        </div>
+        <div class="ui-btn-group">
+          <button class="ui-btn ui-btn-primary">新增規則</button>
+          <button class="ui-btn ui-btn-secondary">套用規則</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: Rule Setting No-Code -->
+  <section class="slide" data-slide="6">
+    <div class="slide-content">
+      <div class="slide-num">07 / 10</div>
+      <h2 class="slide-title">規則設定<br>（無需代碼）</h2>
+      <div class="title-line"></div>
+      <p class="slide-value">降低設定門檻，加快上線</p>
+      <ul class="bullet-list">
+        <li>無需代碼修改</li>
+        <li>智能新增排更規定</li>
+        <li>設定規定排序</li>
+        <li>按需求啟動/關閉規定</li>
+      </ul>
+      <div class="benefit-tag">✦ 拖放排序，一鍵開關規則</div>
+    </div>
+    <div class="slide-visual">
+      <div class="mockup-card" style="position:relative;min-height:280px">
+        <div class="mockup-header">
+          <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+          <span class="mockup-title">規則管理</span>
+        </div>
+        <div class="rule-card" style="animation:none">
+          <div style="color:var(--white-40);font-size:14px">☰</div>
+          <div class="rule-text">通宵更後需休息12小時</div>
+          <div class="toggle"></div>
+        </div>
+        <div class="rule-card" style="animation:none">
+          <div style="color:var(--white-40);font-size:14px">☰</div>
+          <div class="rule-text">同一區域不可連續3天</div>
+          <div class="toggle"></div>
+        </div>
+        <div class="rule-card" style="animation:none">
+          <div style="color:var(--white-40);font-size:14px">☰</div>
+          <div class="rule-text">優先安排高顏值員工</div>
+          <div class="toggle off"></div>
+        </div>
+        <div class="modal-overlay">
+          <div class="modal-box">
+            <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:10px">➕ 新增排更規定</div>
+            <div class="ui-row"><div class="ui-input" style="font-size:10px">規則名稱...</div></div>
+            <div class="ui-row"><div class="ui-input" style="font-size:10px">觸發條件...</div></div>
+            <button class="ui-btn ui-btn-primary" style="width:100%;margin-top:6px">確認新增</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: Alert Management -->
+  <section class="slide" data-slide="7">
+    <div class="slide-content">
+      <div class="slide-num">08 / 10</div>
+      <h2 class="slide-title">警示管理<br>（事件到通知）</h2>
+      <div class="title-line"></div>
+      <p class="slide-value">把異常與風險即時提醒</p>
+      <ul class="bullet-list">
+        <li>Event Management（事件管理）</li>
+        <li>Occurrence Condition（觸發條件）</li>
+        <li>Alert Method（警示方式）</li>
+        <li>Notification Target（通知目標）</li>
+      </ul>
+      <div class="benefit-tag">✦ 自定義事件→條件→方式→目標</div>
+    </div>
+    <div class="slide-visual">
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+          <span class="mockup-title">提示管理</span>
+        </div>
+        <div class="alert-grid">
+          <div class="alert-block">
+            <h4>📌 事件管理</h4>
+            <button class="mini-btn">新增</button><button class="mini-btn">刪除</button>
+            <div style="margin-top:6px;font-size:10px;color:var(--white-70)">• 人手不足<br>• 請假審批</div>
+          </div>
+          <div class="alert-block">
+            <h4>⚡ 發生條件</h4>
+            <button class="mini-btn">新增</button><button class="mini-btn">刪除</button>
+            <div style="margin-top:6px;font-size:10px;color:var(--white-70)">• 缺口 &gt; 2人<br>• 工時超標</div>
+          </div>
+          <div class="alert-block">
+            <h4>🔔 提示方式</h4>
+            <button class="mini-btn">新增</button><button class="mini-btn">刪除</button>
+            <div style="margin-top:6px;font-size:10px;color:var(--white-70)">• Email<br>• App Push</div>
+          </div>
+          <div class="alert-block">
+            <h4>👤 通知目標</h4>
+            <button class="mini-btn">新增</button><button class="mini-btn">刪除</button>
+            <div style="margin-top:6px;font-size:10px;color:var(--white-70)">• OM<br>• SV</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9: Event Roster -->
+  <section class="slide" data-slide="8">
+    <div class="slide-content">
+      <div class="slide-num">09 / 10</div>
+      <h2 class="slide-title">活動人手安排<br>（Ad Hoc）</h2>
+      <div class="title-line"></div>
+      <p class="slide-value">活動也能快速排到位</p>
+      <ul class="bullet-list">
+        <li>Ad Hoc 活動人手安排</li>
+        <li>活動人員技能安排</li>
+      </ul>
+      <div class="benefit-tag">✦ 大型活動即時調配人手</div>
+    </div>
+    <div class="slide-visual">
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+          <span class="mockup-title">活動人手配置</span>
+        </div>
+        <div class="event-list-item">
+          <div class="event-date">11/15</div>
+          <div class="event-info">
+            <strong>香港會展大型活動</strong><br>
+            需要 8 人
+            <div style="margin-top:4px">
+              <span class="skill-tag">大堂</span>
+              <span class="skill-tag">商場</span>
+              <span class="skill-tag">VIP</span>
+            </div>
+          </div>
+        </div>
+        <div class="event-list-item">
+          <div class="event-date">11/20</div>
+          <div class="event-info">
+            <strong>太古廣場開幕活動</strong><br>
+            需要 5 人
+            <div style="margin-top:4px">
+              <span class="skill-tag">停車場</span>
+              <span class="skill-tag">天台</span>
+            </div>
+          </div>
+        </div>
+        <div class="event-list-item">
+          <div class="event-date">11/25</div>
+          <div class="event-info">
+            <strong>藍灣半島社區日</strong><br>
+            需要 3 人
+            <div style="margin-top:4px">
+              <span class="skill-tag">住客會所</span>
+            </div>
+          </div>
+        </div>
+        <button class="ui-btn ui-btn-primary" style="width:100%;margin-top:8px">新增活動安排</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10: Staff Portal -->
+  <section class="slide" data-slide="9">
+    <div class="slide-content">
+      <div class="slide-num">10 / 10</div>
+      <h2 class="slide-title">員工手機端<br>（Staff Portal）</h2>
+      <div class="title-line"></div>
+      <p class="slide-value">員工自主提交與即時查看</p>
+      <ul class="bullet-list">
+        <li>提交可上班日子與時段</li>
+        <li>查看已安排當值時間</li>
+        <li>例假申請（全職）</li>
+        <li>更表調動申請（如需）</li>
+      </ul>
+      <div class="benefit-tag">✦ 每週五20:00前提交下週偏好</div>
+    </div>
+    <div class="slide-visual">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div style="text-align:center;font-weight:700;font-size:11px;margin-bottom:8px;color:var(--teal)">Staff Portal</div>
+          <div class="phone-nav">
+            <span class="phone-tab active">上班偏好</span>
+            <span class="phone-tab">本週更表</span>
+            <span class="phone-tab">例假</span>
+            <span class="phone-tab">調動</span>
+          </div>
+          <div style="font-size:9px;color:var(--white-70);margin-bottom:6px">2025年11月更表</div>
+          <div class="phone-calendar">
+            <div class="cal-day">一</div><div class="cal-day">二</div><div class="cal-day">三</div>
+            <div class="cal-day">四</div><div class="cal-day">五</div><div class="cal-day">六</div><div class="cal-day">日</div>
+            <div class="cal-day"></div><div class="cal-day"></div><div class="cal-day work">3</div>
+            <div class="cal-day work">4</div><div class="cal-day off">5</div><div class="cal-day work">6</div>
+            <div class="cal-day work">7</div><div class="cal-day"></div><div class="cal-day work">10</div>
+            <div class="cal-day work">11</div><div class="cal-day off">12</div><div class="cal-day work">13</div>
+            <div class="cal-day work">14</div>
+          </div>
+          <div style="margin-top:8px;padding:8px;background:rgba(0,206,209,0.1);border-radius:8px">
+            <div style="font-size:9px;color:var(--teal);font-weight:700">本週更表</div>
+            <div style="font-size:8px;color:var(--white-70);margin-top:4px">週三 A更 09-16 太古廣場</div>
+            <div style="font-size:8px;color:var(--white-70)">週五 B更 10-18 大堂</div>
+          </div>
+          <button class="ui-btn ui-btn-primary" style="width:100%;margin-top:8px;font-size:9px;padding:6px">提交調動申請</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" title="上一頁" disabled="">‹</button>
+  <div class="nav-dots" id="navDots"></div>
+  <button class="nav-btn" id="nextBtn" title="下一頁">›</button>
+</div>
+<div class="slide-counter"><span id="currentNum">01</span> / 10</div>
+
 <script>
-    (function() {
-        const slides = document.querySelectorAll('.slide');
-        const prevButton = document.getElementById('prevBtn');
-        const nextButton = document.getElementById('nextBtn');
-        const indicator = document.getElementById('pageIndicator');
-        const slidesArea = document.getElementById('slidesArea');
+  var slides = document.querySelectorAll('.slide');
+  var total = slides.length;
+  var current = 0;
+  var animating = false;
 
-        if (!slides.length || !prevButton || !nextButton || !indicator) {
-            return;
-        }
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var progressBar = document.getElementById('progressBar');
+  var currentNum = document.getElementById('currentNum');
+  var navDots = document.getElementById('navDots');
 
-        let currentIdx = 0;
-        const totalSlides = slides.length;
+  function twoDigit(number) {
+    return number < 10 ? '0' + number : String(number);
+  }
 
-        function updateSlides() {
-            slides.forEach((slide, idx) => {
-                if (idx === currentIdx) {
-                    slide.classList.add('active');
-                } else {
-                    slide.classList.remove('active');
-                }
-            });
-            indicator.innerText = `${currentIdx + 1} / ${totalSlides}`;
-            prevButton.disabled = (currentIdx === 0);
-            nextButton.disabled = (currentIdx === totalSlides - 1);
-            if (slidesArea) slidesArea.scrollTop = 0;
-        }
+  function bindTap(element, handler) {
+    var touchHandled = false;
 
-        function goToNext() {
-            if (currentIdx < totalSlides - 1) {
-                currentIdx++;
-                updateSlides();
-            }
-        }
+    element.addEventListener('touchend', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      touchHandled = true;
+      handler(event);
+      setTimeout(function () {
+        touchHandled = false;
+      }, 350);
+    }, false);
 
-        function goToPrev() {
-            if (currentIdx > 0) {
-                currentIdx--;
-                updateSlides();
-            }
-        }
+    element.addEventListener('click', function (event) {
+      if (touchHandled) return;
+      handler(event);
+    }, false);
+  }
 
-        function addDisabledGuard(btn, callback) {
-            return (e) => {
-                if (btn.disabled) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return;
-                }
-                callback(e);
-            };
-        }
+  // Build dots
+  for (var i = 0; i < total; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    (function (targetIndex) {
+      bindTap(dot, function () {
+        goTo(targetIndex);
+      });
+    })(i);
+    navDots.appendChild(dot);
+  }
 
-        const handleNext = (e) => {
-            if (e) {
-                e.preventDefault?.();
-                e.stopPropagation?.();
-            }
-            goToNext();
-        };
-        const handlePrev = (e) => {
-            if (e) {
-                e.preventDefault?.();
-                e.stopPropagation?.();
-            }
-            goToPrev();
-        };
+  function updateUI() {
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+    currentNum.textContent = twoDigit(current + 1);
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    var dots = document.querySelectorAll('.nav-dot');
+    for (var i = 0; i < dots.length; i++) {
+      if (i === current) {
+        dots[i].classList.add('active');
+      } else {
+        dots[i].classList.remove('active');
+      }
+    }
+  }
 
-        const guardedNext = addDisabledGuard(nextButton, handleNext);
-        const guardedPrev = addDisabledGuard(prevButton, handlePrev);
+  function goTo(index) {
+    if (animating || index === current || index < 0 || index >= total) return;
+    animating = true;
 
-        nextButton.addEventListener('touchstart', guardedNext, { passive: false });
-        nextButton.addEventListener('click', guardedNext);
-        prevButton.addEventListener('touchstart', guardedPrev, { passive: false });
-        prevButton.addEventListener('click', guardedPrev);
+    var direction = index > current ? 1 : -1;
+    var oldSlide = slides[current];
+    var newSlide = slides[index];
 
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                if (!nextButton.disabled) goToNext();
-            } else if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                if (!prevButton.disabled) goToPrev();
-            }
-        });
+    oldSlide.classList.remove('active');
+    oldSlide.classList.add(direction > 0 ? 'exit-left' : 'exit-right');
+    newSlide.classList.add('active');
 
-        updateSlides();
-        if (slidesArea) slidesArea.scrollTop = 0;
-    })();
+    setTimeout(function () {
+      oldSlide.classList.remove('exit-left');
+      oldSlide.classList.remove('exit-right');
+      current = index;
+      updateUI();
+      animating = false;
+    }, 500);
+  }
+
+  bindTap(prevBtn, function () {
+    goTo(current - 1);
+  });
+  bindTap(nextBtn, function () {
+    goTo(current + 1);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goTo(current - 1);
+    } else if (e.key === 'Home') {
+      goTo(0);
+    } else if (e.key === 'End') {
+      goTo(total - 1);
+    }
+  });
+
+  // Touch swipe
+  var touchStartX = 0;
+  document.addEventListener('touchstart', function (e) {
+    touchStartX = e.touches[0].clientX;
+  }, false);
+  document.addEventListener('touchend', function (e) {
+    if (!e.changedTouches || !e.changedTouches.length) return;
+    var diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      goTo(diff > 0 ? current + 1 : current - 1);
+    }
+  }, false);
+
+  updateUI();
 </script>
-</body>
-</html>
+
+
+</body></html>

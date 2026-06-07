@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ACHIEVER 智能排更系統 | 自動排更方案簡報</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #eef5ff 0%, #d9e9fa 100%);
+            overflow: hidden;
+            height: 100vh;
+            color: #1a2c3e;
+        }
+
+        .slides-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s;
+            overflow-y: auto;
+            padding: 2rem 2.5rem;
+            scrollbar-width: thin;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        .slide::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide::-webkit-scrollbar-track {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: #2c6e9e;
+            border-radius: 8px;
+        }
+
+        .slide-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.94);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 20, 50, 0.2);
+            padding: 2.2rem 2.8rem;
+            border: 1px solid rgba(59,130,246,0.25);
+        }
+
+        .two-columns {
+            display: flex;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+        }
+        .text-col {
+            flex: 1.2;
+            min-width: 280px;
+        }
+        .visual-col {
+            flex: 1;
+            background: #f0f7fe;
+            border-radius: 1.5rem;
+            padding: 1.4rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #bfdbfe;
+        }
+
+        .main-title {
+            font-weight: 700;
+            background: linear-gradient(135deg, #0b3b5f, #1e6fa8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.01em;
+            font-size: 2.4rem;
+            margin-bottom: 0.75rem;
+        }
+        .value-prop {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2563eb;
+            background: #e6f0ff;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            margin-bottom: 1.6rem;
+        }
+        .bullet-list {
+            list-style: none;
+            padding: 0;
+        }
+        .bullet-list li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            font-weight: 500;
+            font-size: 1.08rem;
+            color: #1e293b;
+            line-height: 1.4;
+        }
+        .bullet-list li i {
+            color: #1e6fa8;
+            font-size: 1.35rem;
+            margin-top: 0.1rem;
+            min-width: 1.6rem;
+        }
+        .visual-col h4 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #2c6e9e;
+            margin-bottom: 1.2rem;
+            border-left: 3px solid #2c6e9e;
+            padding-left: 0.7rem;
+        }
+
+        .mock-ui {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .mock-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .mock-table th, .mock-table td {
+            border: 1px solid #cbd5e1;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .mock-badge {
+            background: #2563eb10;
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .rule-card {
+            background: #ffffffdd;
+            border-left: 4px solid #2563eb;
+            padding: 0.7rem;
+            margin-bottom: 0.8rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        .phone-mock {
+            background: #121826;
+            border-radius: 28px;
+            padding: 1.2rem 0.8rem;
+            color: white;
+            max-width: 240px;
+            margin: 0 auto;
+        }
+        button.mock-btn {
+            background: #2563eb;
+            border: none;
+            color: white;
+            padding: 0.25rem 0.8rem;
+            border-radius: 24px;
+            font-size: 0.75rem;
+        }
+        .roi-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        .stat-card {
+            background: linear-gradient(145deg, #ffffff, #f5faff);
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            flex: 1;
+            text-align: center;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+            min-width: 200px;
+        }
+        .big-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e6fa8;
+        }
+        .huge-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #1e6fa8;
+        }
+
+        .nav-controls {
+            position: fixed;
+            bottom: 1.8rem;
+            right: 2rem;
+            z-index: 20;
+            display: flex;
+            gap: 0.8rem;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .nav-btn {
+            background: #1e6fa8;
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .nav-btn:hover {
+            background: #0f4c73;
+            transform: scale(1.03);
+        }
+        .page-indicator {
+            background: #ffffffcc;
+            border-radius: 30px;
+            padding: 0.4rem 1rem;
+            font-weight: 600;
+            color: #1e2f3e;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 800px) {
+            .slide { padding: 1.2rem; }
+            .slide-content { padding: 1.5rem; }
+            .two-columns { flex-direction: column; }
+            .main-title { font-size: 1.8rem; }
+            .bullet-list li { font-size: 0.95rem; }
+        }
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            margin-top: 2rem;
+            color: #5a6e7c;
+            border-top: 1px solid #cbdff2;
+            padding-top: 1rem;
+        }
+        hr {
+            margin: 1rem 0;
+            border-color: #bfdbfe;
+        }
+        .goal-section {
+            background: #eef4ff;
+            border-radius: 1.2rem;
+            padding: 1rem 1.3rem;
+            margin-top: 1.4rem;
+            border-left: 5px solid #1e6fa8;
+        }
+        .goal-section p {
+            margin: 0.4rem 0;
+            font-weight: 500;
+        }
+        .highlight {
+            background: #d9effa;
+            padding: 0.1rem 0.3rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .roi-box {
+            background: #e6f4ea;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="slides-container" id="slidesContainer">
+    <!-- 第1頁｜AI 編更與員工入口總覽 ＋ 詳細使用目標 -->
+    <div class="slide active" id="slide1">
+        <div class="slide-content">
+            <div class="two-columns">
+                <div class="text-col">
+                    <div class="main-title">AI 自動排更系統</div>
+                    <div class="value-prop"><i class="fas fa-robot"></i> 含員工手機端 · 用規則自動化排更流程</div>
+                    <ul class="bullet-list">
+                        <li><i class="fas fa-check-circle"></i> 統一設定與流程鎖定</li>
+                        <li><i class="fas fa-clock"></i> 支援標準工時與需求配置</li>
+                        <li><i class="fas fa-cogs"></i> 以規則自動生成更表</li>
+                        <li><i class="fas fa-exclamation-triangle"></i> 提供警示與活動編排</li>
+                        <li><i class="fas fa-mobile-alt"></i> 員工可在手機端提交與查看</li>
+                    </ul>
+                    <div class="goal-section">
+                        <i class="fas fa-bullseye" style="color:#1e6fa8; margin-right:8px;"></i> <strong>📌 使用 ACHIEVER 智能排更的詳細目標</strong>
+                        <p>✓ 為株式会社 (kabu.com.hk) 旗下60間店舖、1200名員工建立「基準人手模型」，精準控制人力成本。</p>
+                        <p>✓ 透過系統累積歷史數據，分析最佳人手安排建議，杜絕冗員及人手不足風險。</p>
+                        <p>✓ 自動合規 (468勞工條例) 降低勞資風險，提升員工滿意度。</p>
+                        <p>✓ 將排更行政作業時間減少85%，讓管理層專注於營運策略。</p>
+                    </div>
+                </div>
+                <div class="visual-col">
+                    <h4><i class="fas fa-chalkboard"></i> 流程鏈示意</h4>
+                    <div class="mock-ui" style="text-align:center;">
+                        <div style="display:flex; justify-content:space-between; gap:0.5rem; flex-wrap:wrap;">
+                            <span class="mock-badge">⚙️ 設定</span> <i class="fas fa-arrow-right"></i>
+                            <span class="mock-badge">📋 規則</span> <i class="fas fa-arrow-right"></i>
+                            <span class="mock-badge">📅 排更</span> <i class="fas fa-arrow-right"></i>
+                            <span class="mock-badge">🔔 通知</span> <i class="fas fa-arrow-right"></i>
+                            <span class="mock-badge">📱 員工入口</span>
+                        </div>
+                        <hr style="margin:1rem 0">
+                        <i class="fas fa-chart-simple" style="font-size:2.2rem; color:#2c6e9e;"></i>
+                        <p style="font-size:0.85rem;">AI 引擎自動生成最優更表</p>
+                    </div>
+                </div>
+            </div>
+            <footer>ACHIEVER TECHNOLOGY LIMITED × 株式会社 kabu.com.hk 智能排更方案</footer>
+        </div>
+    </div>
+
+    <!-- 第2頁 Monthly Settings & Process Lock -->
+    <div class="slide" id="slide2">
+        <div class="slide-content">
+            <div class="two-columns">
+                <div class="text-col"><div class="main-title">每月/每週/每日流程鎖定</div><div class="value-prop">確保排更流程可控</div>
+                <ul class="bullet-list"><li><i class="fas fa-calendar-week"></i> 支援 Monthly / Weekly / Daily assignments</li><li><i class="fas fa-paper-plane"></i> 提交 SV（Submit SV）</li><li><i class="fas fa-check-double"></i> 提交 OM（Submit OM）</li><li><i class="fas fa-bullhorn"></i> 發佈 OM（Publish OM）</li></ul></div>
+                <div class="visual-col"><h4><i class="fas fa-sliders-h"></i> 流程控制台</h4><div class="mock-ui"><div style="background:#e2e8f0; border-radius:0.7rem; padding:0.8rem;"><div>📆 月份選擇: 六月 2026</div><div style="margin-top:0.8rem;"><button class="mock-btn">Submit SV</button> <button class="mock-btn">Submit OM</button> <button class="mock-btn">Publish OM</button></div><div class="mock-badge" style="margin-top:0.8rem;">🔒 流程版本鎖定</div></div></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第3頁 每日標準工時與人力需求 (半小時/15分鐘粒度 + 經理) -->
+    <div class="slide" id="slide3">
+        <div class="slide-content"><div class="two-columns"><div class="text-col"><div class="main-title">每日標準工時與人力需求</div><div class="value-prop">把需求轉成可排更條件</div><ul class="bullet-list"><li><i class="fas fa-tools"></i> 支援不同技能需求及崗位指派</li><li><i class="fas fa-clock"></i> 排更粒度可控制至<span class="highlight">半小時／15分鐘</span>，精準匹配營運高峰</li><li><i class="fas fa-sun"></i> 設定工作日/假日工時要求</li><li><i class="fas fa-users"></i> 設定所需人手</li><li><i class="fas fa-filter"></i> 支援條件變量（年齡/性別/技能等級）</li></ul></div><div class="visual-col"><h4>工作日/假日兩欄表 (15分鐘粒度)</h4><div class="mock-ui"><div style="display:flex; gap:1rem;"><div style="flex:1"><strong>📆 工作日</strong><div>工時: 9小時</div><div>人手: 12人</div><div>技能: 收銀/客服</div><div>排更間隔: 15分鐘</div></div><div style="flex:1"><strong>🌙 假日</strong><div>工時: 8小時</div><div>人手: 18人</div><div>技能: <span style="background:#e9f0ff;">經理</span>/接待</div><div>排更間隔: 30分鐘</div></div></div><div class="mock-badge" style="margin-top:0.6rem;">✅ 可配置半小時/15分鐘時段，滿足複雜人力調度</div></div></div></div></div>
+    </div>
+
+    <!-- 第4頁 Custom Standard Shifts (含午夜班) -->
+    <div class="slide" id="slide4">
+        <div class="slide-content"><div class="two-columns"><div class="text-col"><div class="main-title">自訂標準更（含午夜班）</div><div class="value-prop">更表更貼近實際營運</div><ul class="bullet-list"><li><i class="fas fa-tag"></i> 設定 Roster Code</li><li><i class="fas fa-hourglass-start"></i> Start time / End time (支援15分鐘單位)</li><li><i class="fas fa-chart-line"></i> 顯示 Total Working Hours</li><li><i class="fas fa-moon"></i> 支援 midnight shift（午夜班）</li><li><i class="fas fa-edit"></i> 容易設定與調整</li></ul></div><div class="visual-col"><h4>更表清單一覽</h4><div class="mock-ui"><table class="mock-table"><tr><th>更次代碼</th><th>時段</th><th>工時</th><th></th><tr><td>早班A</td><td>09:00-18:00</td><td>9h</td><td><i class="fas fa-edit"></i></td></tr><tr><td>午夜班N</td><td>23:00-07:00</td><td>8h</td><td><i class="fas fa-trash"></i></td></tr></table><div class="mock-badge">+ 新增更次 (間隔可15分鐘)</div></div></div></div></div>
+    </div>
+
+    <!-- 第5頁 Staff Submission & Leaves -->
+    <div class="slide" id="slide5">
+        <div class="slide-content"><div class="two-columns"><div class="text-col"><div class="main-title">員工提交與請/例假處理</div><div class="value-prop">讓員工意願快速納入排更</div><ul class="bullet-list"><li><i class="fas fa-user-tag"></i> 招募類型（FT/PT/Casual/Temporary）</li><li><i class="fas fa-heart"></i> 設定 Preferred Working Days（偏好上班日）</li><li><i class="fas fa-tachometer-alt"></i> 支援快速與簡易調整</li></ul></div><div class="visual-col"><h4>員工列表＋Off Days</h4><div class="mock-ui"><table class="mock-table"><tr><th>員工</th><th>類型</th><th>偏好日</th><th>請假</th></tr><tr><td>山田太郎</td><td>FT</td><td>週一至五</td><td>6/15</td></tr><tr><td>李麗華</td><td>PT</td><td>週末</td><td>-</td></tr></table><div class="mock-badge">快速調整偏好</div></div></div></div></div>
+    </div>
+
+    <!-- 第6頁 Auto Scheduling Rules (更新文字: 468勞工條例, 支援不同技能及工種崗位套用) -->
+    <div class="slide" id="slide6">
+        <div class="slide-content"><div class="two-columns"><div class="text-col"><div class="main-title">自動排更規則引擎</div><div class="value-prop">用規則自動生成最適更表</div><ul class="bullet-list"><li><i class="fas fa-plus-circle"></i> 新增排更規則設定</li><li><i class="fas fa-sort-amount-down"></i> 規則套用優先順序</li><li><i class="fas fa-briefcase"></i> 支援不同技能及工種崗位套用</li><li><i class="fas fa-gavel"></i> 468勞工條例（合規）</li></ul></div><div class="visual-col"><h4>規則優先級引擎</h4><div class="mock-ui"><div class="rule-card">🔹 規則1: 避免連續夜班 (優先級 1)</div><div class="rule-card">🔸 規則2: 資深員工優先週末休 (優先級 2)</div><div class="rule-card">🔹 規則3: 合規468勞工條例 (優先級 0-最高)</div><div class="mock-badge">+ 新增規則</div></div></div></div></div>
+    </div>
+
+    <!-- 第7頁 Rule Setting（免代碼） -->
+    <div class="slide" id="slide7">
+        <div class="slide-content"><div class="two-columns"><div class="text-col"><div class="main-title">規則設定（無需代碼）</div><div class="value-prop">降低設定門檻，加快上線</div><ul class="bullet-list"><li><i class="fas fa-code-branch"></i> 無需代碼修改</li><li><i class="fas fa-brain"></i> 智能新增排更規定</li><li><i class="fas fa-list-ol"></i> 設定規定排序</li><li><i class="fas fa-toggle-on"></i> 按需求啟動/關閉規定</li></ul></div><div class="visual-col"><h4>彈窗式規則配置</h4><div class="mock-ui"><div style="background:#fff; border-radius:12px; padding:0.6rem;"><i class="fas fa-window-restore"></i> 「新增排更規定」<br>規定名稱: 避免超時工作<br>優先級: 高 &nbsp; <label class="mock-badge">啟用 <i class="fas fa-toggle-on"></i></label></div><div><i class="fas fa-arrow-up"></i> 排序拖動示意</div></div></div></div></div>
+    </div>
+
+    <!-- 第8頁 Alert Management -->
+    <div class="slide" id="slide8">
+        <div class="slide-content"><div class="two-columns"><div class="text-col"><div class="main-title">警示管理（事件到通知）</div><div class="value-prop">把異常與風險即時提醒</div><ul class="bullet-list"><li><i class="fas fa-bell"></i> Event Management（事件管理）</li><li><i class="fas fa-exclamation-circle"></i> Occurrence Condition（觸發條件）</li><li><i class="fas fa-envelope"></i> Alert Method（警示方式）</li><li><i class="fas fa-users"></i> Notification Target（通知目標）</li></ul></div><div class="visual-col"><h4>四格設定區塊</h4><div class="mock-ui"><div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem;"><div><i class="fas fa-calendar-day"></i> 事件: 缺勤風險</div><div><i class="fas fa-chart-line"></i> 條件: 工時超限</div><div><i class="fas fa-mobile-alt"></i> 方法: App推播</div><div><i class="fas fa-user-tie"></i> 目標: 店長+HR</div></div><div class="mock-badge" style="margin-top:0.6rem;">+ Add/Delete 規則</div></div></div></div></div>
+    </div>
+
+    <!-- 第9頁 Event Roster（活動人手與技能） -->
+    <div class="slide" id="slide9">
+        <div class="slide-content"><div class="two-columns"><div class="text-col"><div class="main-title">活動人手安排 (Ad Hoc)</div><div class="value-prop">活動也能快速排到位</div><ul class="bullet-list"><li><i class="fas fa-calendar-plus"></i> Ad Hoc 活動人力安排</li><li><i class="fas fa-microphone-alt"></i> 活動人員技能安排</li></ul></div><div class="visual-col"><h4>活動清單＋人力配置</h4><div class="mock-ui"><div>🎉 週年慶典 6/20</div><div>所需技能: 經理/接待/收銀</div><div>指派員工: 王明(經理), 陳紅(接待)...</div><div class="mock-badge">快速調派</div></div></div></div></div>
+    </div>
+
+    <!-- 第10頁 Staff Portal（員工手機功能） -->
+    <div class="slide" id="slide10">
+        <div class="slide-content"><div class="two-columns"><div class="text-col"><div class="main-title">員工手機端 (Staff Portal)</div><div class="value-prop">員工自主提交與即時查看</div><ul class="bullet-list"><li><i class="fas fa-calendar-check"></i> 提交可上班日子與時段</li><li><i class="fas fa-eye"></i> 查看已安排當值時間</li><li><i class="fas fa-umbrella-beach"></i> 例假申請（全職）</li><li><i class="fas fa-exchange-alt"></i> 更表調動申請</li></ul></div><div class="visual-col"><h4>📱 手機端介面示意</h4><div class="phone-mock"><i class="fas fa-calendar-alt"></i> 6月更表<br>6/10 早班 09-18<br>[申請調班] [請假]<br><div class="mock-badge" style="background:#2563eb;">我的偏好</div></div></div></div></div>
+    </div>
+
+    <!-- 第11頁 ROI 更新：每月每鋪節省0.5人力成本 HKD8,000 → 年省5,760,000，計算ROI並顯示倍數 -->
+    <div class="slide" id="slide11">
+        <div class="slide-content">
+            <div class="main-title" style="font-size:2rem;">📊 人力成本節省實證 · 投資回報率 (ROI)</div>
+            <div class="value-prop"><i class="fas fa-chart-line"></i> 保守計算：每店每月節省0.5人力成本</div>
+            <div class="two-columns">
+                <div class="text-col">
+                    <ul class="bullet-list">
+                        <li><i class="fas fa-user-clock"></i> <strong>每間店舖每月節省0.5個人力</strong> — 透過AI精準排更，減少冗員及無效工時，以基層員工平均月薪HK$8,000計算</li>
+                        <li><i class="fas fa-store"></i> <strong>60間店舖 × 每月節省HK$8,000 = 每月節省HK$480,000</strong><br>每年節省總人力成本：<span class="highlight">HK$5,760,000</span></li>
+                        <li><i class="fas fa-chart-pie"></i> <strong>投資回報率 (ROI)</strong><br>
+                        系統年費：每店每月約HK$1,000 → 60店年費 HK$720,000<br>
+                        年度淨節省 = 5,760,000 - 720,000 = HK$5,040,000<br>
+                        ROI = (淨節省 ÷ 投資成本) × 100% = <strong class="highlight">700%</strong><br>
+                        等同於每投入1元，即可節省<span class="highlight">8元</span>的人力成本。
+                        </li>
+                        <li><i class="fas fa-chart-simple"></i> 此外系統還能降低合規風險、提升員工滿意度，創造非財務效益。</li>
+                    </ul>
+                    <div class="roi-box">
+                        <i class="fas fa-trophy" style="font-size:1.8rem; color:#1e6fa8;"></i>
+                        <p><strong>年度總節省人力成本</strong><br><span style="font-size:2rem; font-weight:800; color:#0f5c2d;">HK$5,760,000</span></p>
+                        <p>扣除系統投入後，淨回報超過500萬港幣</p>
+                    </div>
+                </div>
+                <div class="visual-col">
+                    <h4>📈 ROI 關鍵數據 (60店舖)</h4>
+                    <div class="roi-stats">
+                        <div class="stat-card">
+                            <span class="big-number">0.5人/月/店</span><br>人力節省
+                        </div>
+                        <div class="stat-card">
+                            <span class="big-number">700%</span><br>投資回報率
+                        </div>
+                        <div class="stat-card">
+                            <span class="big-number">8倍</span><br>成本節省倍數
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mock-ui text-center" style="background: #eef2fa;">
+                        <i class="fas fa-calculator" style="color:#2c6e9e;"></i> <strong>計算依據</strong><br>
+                        每店每月省0.5人力 × HK$8,000 = HK$4,000/月/店<br>
+                        60店月省 HK$480,000 → 年省 HK$5,760,000<br>
+                        系統年費 HK$720,000 → 淨節省 HK$5,040,000<br>
+                        <span class="mock-badge" style="background:#2563eb; color:white;">✅ 極高投資回報，快速回本</span>
+                    </div>
+                </div>
+            </div>
+            <footer>ACHIEVER TECHNOLOGY LIMITED — 用數據實現人力成本最佳化，ROI超過700%</footer>
+        </div>
+    </div>
+</div>
+
+<div class="nav-controls">
+    <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+    <span class="page-indicator" id="pageIndicator">1 / 11</span>
+    <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+</div>
+
+<script>
+    const slides = document.querySelectorAll('.slide');
+    let currentIdx = 0;
+    const total = slides.length;
+
+    function updateSlides() {
+        slides.forEach((slide, idx) => {
+            if(idx === currentIdx) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+        document.getElementById('pageIndicator').innerText = (currentIdx+1) + ' / ' + total;
+    }
+
+    function nextSlide() {
+        if(currentIdx < total-1) {
+            currentIdx++;
+            updateSlides();
+        }
+    }
+    function prevSlide() {
+        if(currentIdx > 0) {
+            currentIdx--;
+            updateSlides();
+        }
+    }
+    document.getElementById('nextBtn').addEventListener('click', nextSlide);
+    document.getElementById('prevBtn').addEventListener('click', prevSlide);
+    window.addEventListener('keydown', (e) => {
+        if(e.key === 'ArrowRight') nextSlide();
+        if(e.key === 'ArrowLeft') prevSlide();
+    });
+    updateSlides();
+</script>
+</body>
+</html>
